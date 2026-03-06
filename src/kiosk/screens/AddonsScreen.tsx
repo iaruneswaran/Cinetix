@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Minus } from 'lucide-react';
-import KioskHeader from '../components/KioskHeader';
 import KioskFooter from '../components/KioskFooter';
 import { ADDONS, Addon } from '../types';
 
@@ -40,7 +39,6 @@ export default function AddonsScreen({ booking, updateBooking, goTo, goBack, res
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
-      <KioskHeader step={3} onBack={goBack} onCancel={resetBooking} />
 
       <div className="flex-1 overflow-auto px-6 pt-6">
         <h1 className="text-h1 mb-2">Add Snacks & Drinks</h1>
@@ -56,9 +54,8 @@ export default function AddonsScreen({ booking, updateBooking, goTo, goBack, res
             <button
               key={t.key}
               onClick={() => setTab(t.key as any)}
-              className={`px-6 h-14 text-label font-medium border-2 transition-all ${
-                tab === t.key ? 'bg-primary border-primary text-foreground' : 'border-border text-text-secondary hover:border-primary'
-              }`}
+              className={`px-6 h-14 text-label font-medium border-2 transition-all ${tab === t.key ? 'bg-primary border-primary text-foreground' : 'border-border text-text-secondary hover:border-primary'
+                }`}
             >
               {t.label}
             </button>

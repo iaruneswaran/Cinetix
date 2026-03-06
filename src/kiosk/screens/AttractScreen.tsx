@@ -31,12 +31,19 @@ export default function AttractScreen({ goTo }: Props) {
         initial={{ opacity: 0, scale: 1.05 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.8 }}
         className="absolute inset-0"
         style={{ backgroundColor: movie.posterColor }}
       >
+        {movie.posterUrl && (
+          <img
+            src={movie.posterUrl}
+            alt={movie.title}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
       </motion.div>
 
       {/* Animated red line accents */}
@@ -84,9 +91,8 @@ export default function AttractScreen({ goTo }: Props) {
           {MOVIES.map((_, i) => (
             <div
               key={i}
-              className={`h-[4px] transition-all duration-300 ${
-                i === current ? 'w-12 bg-primary' : 'w-4 bg-border'
-              }`}
+              className={`h-[4px] transition-all duration-300 ${i === current ? 'w-12 bg-primary' : 'w-4 bg-border'
+                }`}
             />
           ))}
         </div>

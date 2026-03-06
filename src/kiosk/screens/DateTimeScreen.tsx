@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
-import KioskHeader from '../components/KioskHeader';
 import KioskFooter from '../components/KioskFooter';
 import { SHOWTIMES } from '../types';
 
@@ -37,7 +36,6 @@ export default function DateTimeScreen({ booking, updateBooking, goTo, goBack, r
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
-      <KioskHeader step={1} onBack={goBack} onCancel={resetBooking} />
 
       <div className="flex-1 overflow-auto px-6 pt-6">
         {/* Movie mini banner */}
@@ -56,11 +54,10 @@ export default function DateTimeScreen({ booking, updateBooking, goTo, goBack, r
             <button
               key={d.full}
               onClick={() => setSelectedDate(d.full)}
-              className={`min-w-[120px] h-[100px] flex flex-col items-center justify-center border-2 shrink-0 transition-all ${
-                selectedDate === d.full
-                  ? 'bg-primary border-primary text-foreground'
-                  : 'border-border text-text-secondary hover:border-primary'
-              }`}
+              className={`min-w-[120px] h-[100px] flex flex-col items-center justify-center border-2 shrink-0 transition-all ${selectedDate === d.full
+                ? 'bg-primary border-primary text-foreground'
+                : 'border-border text-text-secondary hover:border-primary'
+                }`}
             >
               <span className="text-label">{d.isToday ? 'Today' : d.day}</span>
               <span className="text-h2">{d.date}</span>
@@ -81,13 +78,12 @@ export default function DateTimeScreen({ booking, updateBooking, goTo, goBack, r
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
               onClick={() => setSelectedShowtime(i)}
-              className={`min-h-[100px] p-5 border-2 text-left transition-all ${
-                selectedShowtime === i
-                  ? 'bg-primary border-primary'
-                  : st.availability === 'almost-full'
-                    ? 'border-destructive/40 hover:border-primary'
-                    : 'border-border hover:border-primary'
-              }`}
+              className={`min-h-[100px] p-5 border-2 text-left transition-all ${selectedShowtime === i
+                ? 'bg-primary border-primary'
+                : st.availability === 'almost-full'
+                  ? 'border-destructive/40 hover:border-primary'
+                  : 'border-border hover:border-primary'
+                }`}
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-h3">{st.time}</span>

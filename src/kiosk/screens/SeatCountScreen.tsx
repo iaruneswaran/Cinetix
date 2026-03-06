@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Users } from 'lucide-react';
-import KioskHeader from '../components/KioskHeader';
 import KioskFooter from '../components/KioskFooter';
 
 interface Props {
@@ -17,7 +16,6 @@ export default function SeatCountScreen({ booking, updateBooking, goTo, goBack, 
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
-      <KioskHeader step={2} onBack={goBack} onCancel={resetBooking} />
 
       <div className="flex-1 flex flex-col items-center justify-center px-12">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
@@ -34,11 +32,10 @@ export default function SeatCountScreen({ booking, updateBooking, goTo, goBack, 
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: n * 0.03 }}
               onClick={() => setCount(n)}
-              className={`h-[88px] flex items-center justify-center text-h2 font-bold border-2 transition-all ${
-                count === n
-                  ? 'bg-primary border-primary text-foreground scale-105'
-                  : 'border-border text-text-secondary hover:border-primary'
-              }`}
+              className={`h-[88px] flex items-center justify-center text-h2 font-bold border-2 transition-all ${count === n
+                ? 'bg-primary border-primary text-foreground scale-105'
+                : 'border-border text-text-secondary hover:border-primary'
+                }`}
             >
               {n}
             </motion.button>

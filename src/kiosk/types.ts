@@ -26,6 +26,7 @@ export interface Movie {
   format: string;
   genre: string;
   posterColor: string;
+  posterUrl?: string;
 }
 
 export interface Showtime {
@@ -70,12 +71,12 @@ export interface BookingState {
 }
 
 export const MOVIES: Movie[] = [
-  { id: 1, title: 'INTERSTELLAR: REMASTERED', duration: '2h 49m', rating: 'U/A', language: 'English', format: 'IMAX', genre: 'Sci-Fi', posterColor: '#1a237e' },
-  { id: 2, title: 'DUNE: PART THREE', duration: '2h 35m', rating: 'U/A', language: 'English', format: '4DX', genre: 'Sci-Fi', posterColor: '#bf360c' },
-  { id: 3, title: 'THE DARK KNIGHT RETURNS', duration: '2h 12m', rating: 'A', language: 'English', format: 'IMAX', genre: 'Action', posterColor: '#212121' },
-  { id: 4, title: 'PUSHPA 3: THE RAMPAGE', duration: '2h 58m', rating: 'U/A', language: 'Telugu', format: 'Standard', genre: 'Action', posterColor: '#1b5e20' },
-  { id: 5, title: 'SPIRIT: UNTOLD', duration: '1h 48m', rating: 'U', language: 'Hindi', format: '3D', genre: 'Animation', posterColor: '#4a148c' },
-  { id: 6, title: 'MISSION IMPOSSIBLE: DEAD END', duration: '2h 22m', rating: 'U/A', language: 'English', format: 'IMAX', genre: 'Action', posterColor: '#b71c1c' },
+  { id: 1, title: 'Sisu: Road to Revenge', duration: '1h 31m', rating: 'A', language: 'English', format: 'Standard', genre: 'Action', posterColor: '#1a1a1a', posterUrl: '/assets/Sisu Road to Revenge.jpg' },
+  { id: 2, title: 'Avatar 3: Fire and Ash', duration: '3h 10m', rating: 'U/A', language: 'English', format: '3D', genre: 'Sci-Fi', posterColor: '#004d40', posterUrl: '/assets/Avatar 3 Fire and Ash.jpg' },
+  { id: 3, title: 'Formula 1', duration: '2h 15m', rating: 'U/A', language: 'English', format: 'IMAX', genre: 'Drama', posterColor: '#b71c1c', posterUrl: '/assets/Formula 1.jpg' },
+  { id: 4, title: 'Kraven the Hunter', duration: '2h 10m', rating: 'A', language: 'English', format: 'Standard', genre: 'Action', posterColor: '#3e2723', posterUrl: '/assets/Kraven the Hunter.jpg' },
+  { id: 5, title: 'John Wick', duration: '1h 41m', rating: 'A', language: 'English', format: 'Standard', genre: 'Action', posterColor: '#212121', posterUrl: '/assets/John Wick.jpg' },
+  { id: 6, title: 'Michael', duration: '2h 35m', rating: 'U/A', language: 'English', format: 'IMAX', genre: 'Biography', posterColor: '#ff8f00', posterUrl: '/assets/Michael.jpg' },
 ];
 
 export const SHOWTIMES: Showtime[] = [

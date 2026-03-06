@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
-import KioskHeader from '../components/KioskHeader';
 import KioskFooter from '../components/KioskFooter';
 import { generateSeats, Seat } from '../types';
 
@@ -55,15 +54,59 @@ export default function SeatSelectionScreen({ booking, updateBooking, goTo, goBa
 
   const bestAvailable = () => {
     const avail = allSeats.filter(s => s.status !== 'booked' && !selected.includes(`${s.row}${s.col}`));
-    // Pick center seats from middle rows
-    const mid = Math.floor(avail.length / 2);
-    const best = avail.slice(Math.max(0, mid - Math.floor(maxSeats / 2)), mid + Math.ceil(maxSeats / 2));
-    setSelected(best.slice(0, maxSeats).map(s => `${s.row}${s.col}`));
+    if (avail.length === 0) return;
+
+    // Pick center seats from middle rows (Row E, F, G are usually middle)
+    const preferredRows = ['E', 'F', 'G', 'D', 'H'];
+    const sortedAvail = [...avail].sort((a, b) => {
+      const aRowIdx = preferredRows.indexOf(a.row);
+      const bRowIdx = preferredRows.indexOf(b.row);
+      if (aRowIdx !== bRowIdx) return (aRowIdx === -1 ? 99 : aRowIdx) - (bRowIdx === -1 ? 99 : bRowIdx);
+      return Math.abs(a.col - 7.5) - Math.abs(b.col - 7.5);
+    });
+
+    setSelected(sortedAvail.slice(0, maxSeats).map(s => `${s.row}${s.col}`));
+  };
+
+  const TheaterSeat = ({ seat, isSelected, onClick }: { seat: Seat; isSelected: boolean; onClick: () => void }) => {
+    const isBooked = seat.status === 'booked';
+    const isPremium = seat.status === 'premium';
+    const isAccessible = seat.status === 'accessible';
+
+    let baseColor = "border-text-secondary/30 bg-transparent text-text-secondary hover:border-primary";
+    if (isSelected) baseColor = "bg-primary border-primary text-foreground shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)]";
+    else if (isBooked) baseColor = "bg-surface-alt/50 border-surface-alt text-disabled cursor-not-allowed";
+    else if (isPremium) baseColor = "border-premium/50 text-premium hover:border-premium";
+    else if (isAccessible) baseColor = "border-accessible/50 text-accessible hover:border-accessible";
+
+    return (
+      <motion.button
+        onClick={onClick}
+        disabled={isBooked}
+        whileHover={!isBooked ? { scale: 1.1, y: -2 } : {}}
+        whileTap={!isBooked ? { scale: 0.95 } : {}}
+        animate={isSelected ? { scale: 1.05 } : { scale: 1 }}
+        className={`relative w-10 h-10 transition-all duration-200 group ${isBooked ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+      >
+        {/* Seat Top (Rounded) */}
+        <div className={`absolute inset-x-[2px] top-0 h-[80%] rounded-t-xl border-2 transition-colors ${baseColor.split(' ')[0]} ${baseColor.split(' ')[1]}`}>
+          {/* Armrests */}
+          <div className={`absolute -left-[2px] top-1/2 w-[4px] h-[40%] rounded-full border-l-2 border-y-2 ${baseColor.split(' ')[0]}`} />
+          <div className={`absolute -right-[2px] top-1/2 w-[4px] h-[40%] rounded-full border-r-2 border-y-2 ${baseColor.split(' ')[0]}`} />
+
+          <div className="flex items-center justify-center h-full text-[11px] font-bold">
+            {isSelected ? seat.col : (isBooked ? '' : '')}
+            {isAccessible && !isSelected && !isBooked && <span className="text-[10px]">♿</span>}
+          </div>
+        </div>
+        {/* Seat Bottom Cushion */}
+        <div className={`absolute inset-x-0 bottom-0 h-[30%] rounded-b-lg border-2 border-t-0 transition-colors ${baseColor.split(' ')[0]} ${baseColor.split(' ')[1]}`} />
+      </motion.button>
+    );
   };
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
-      <KioskHeader step={2} onBack={goBack} onCancel={resetBooking} />
 
       <div className="flex-1 overflow-auto px-4 pt-4">
         {/* Category tabs + best available */}
@@ -72,9 +115,8 @@ export default function SeatSelectionScreen({ booking, updateBooking, goTo, goBa
             <button
               key={c}
               onClick={() => setCategory(c)}
-              className={`px-5 h-12 text-label border-2 transition-all ${
-                category === c ? 'bg-primary border-primary text-foreground' : 'border-border text-text-secondary'
-              }`}
+              className={`px-5 h-12 text-label border-2 transition-all ${category === c ? 'bg-primary border-primary text-foreground' : 'border-border text-text-secondary'
+                }`}
             >
               {c}
             </button>
@@ -89,9 +131,34 @@ export default function SeatSelectionScreen({ booking, updateBooking, goTo, goBa
         </div>
 
         {/* Screen indicator */}
-        <div className="text-center mb-6">
-          <div className="mx-auto w-[600px] h-[4px] bg-gradient-to-r from-transparent via-text-secondary to-transparent mb-2" />
-          <span className="text-label text-text-secondary tracking-[3px]">SCREEN</span>
+        <div className="relative flex flex-col items-center mb-12 mt-4">
+          <div className="w-[80%] h-12 relative">
+            <svg viewBox="0 0 800 40" className="w-full h-full drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
+              <path
+                d="M 10,35 Q 400,5 790,35"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="4"
+                strokeLinecap="round"
+                className="text-primary/40"
+              />
+              <path
+                d="M 10,35 Q 400,5 790,35"
+                fill="none"
+                stroke="url(#screenGradient)"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <defs>
+                <linearGradient id="screenGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="transparent" />
+                  <stop offset="50%" stopColor="white" />
+                  <stop offset="100%" stopColor="transparent" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span className="text-label text-text-secondary tracking-[8px] mt-[-10px] opacity-50 uppercase">Cinema Screen</span>
         </div>
 
         {/* Seat map */}
@@ -112,27 +179,21 @@ export default function SeatSelectionScreen({ booking, updateBooking, goTo, goBa
               (category === 'Silver' && rowLabel < 'H');
             if (!showRow) return null;
 
-            // Aisle gap after column 7
             return (
-              <div key={rowLabel} className="flex items-center gap-[6px]">
-                <div className="w-8 text-center text-label text-text-secondary font-medium">{rowLabel}</div>
+              <div key={rowLabel} className="flex items-center gap-[10px]">
+                <div className="w-8 text-center text-label text-text-secondary/60 font-medium mr-2">{rowLabel}</div>
                 {seats.map((seat, i) => {
                   const key = `${seat.row}${seat.col}`;
                   const isSelected = selected.includes(key);
                   return (
-                    <>
-                      {i === 7 && <div className="w-5" />}
-                      <motion.button
-                        key={key}
+                    <div key={key} className="flex items-center">
+                      {i === 7 && <div className="w-10" />}
+                      <TheaterSeat
+                        seat={seat}
+                        isSelected={isSelected}
                         onClick={() => toggleSeat(seat.row, seat.col)}
-                        disabled={seat.status === 'booked'}
-                        animate={isSelected ? { scale: 1.06 } : { scale: 1 }}
-                        transition={{ duration: 0.12 }}
-                        className={`w-9 h-9 border-2 flex items-center justify-center text-[12px] font-medium transition-colors ${getSeatColor(seat, key)}`}
-                      >
-                        {isSelected ? seat.col : ''}
-                      </motion.button>
-                    </>
+                      />
+                    </div>
                   );
                 })}
               </div>
@@ -141,28 +202,32 @@ export default function SeatSelectionScreen({ booking, updateBooking, goTo, goBa
 
           {/* Category labels */}
           {category === 'All' && (
-            <>
-              <div className="w-full flex items-center gap-3 mt-2 mb-1 px-10">
-                <div className="h-[1px] flex-1 bg-border" />
-                <span className="text-label text-premium">GOLD — ₹450</span>
-                <div className="h-[1px] flex-1 bg-border" />
-              </div>
-            </>
+            <div className="w-full flex items-center gap-4 mt-6 mb-2 px-12">
+              <div className="h-[1px] flex-1 bg-white/10" />
+              <span className="text-[11px] font-bold tracking-[3px] text-premium uppercase opacity-80">Gold Section — ₹450</span>
+              <div className="h-[1px] flex-1 bg-white/10" />
+            </div>
           )}
         </div>
 
         {/* Legend */}
-        <div className="flex flex-wrap gap-6 justify-center mt-8 mb-4">
+        <div className="flex flex-wrap gap-8 justify-center mt-12 mb-6 px-4">
           {[
-            { label: 'Available', cls: 'border-text-secondary' },
-            { label: 'Selected', cls: 'bg-primary border-primary' },
-            { label: 'Booked', cls: 'bg-surface-alt border-surface-alt' },
-            { label: 'Premium', cls: 'border-premium' },
-            { label: 'Accessible', cls: 'border-accessible' },
+            { label: 'Available', type: 'available' },
+            { label: 'Selected', type: 'selected' },
+            { label: 'Booked', type: 'booked' },
+            { label: 'Premium', type: 'premium' },
+            { label: 'Accessible', type: 'accessible' },
           ].map(l => (
-            <div key={l.label} className="flex items-center gap-2">
-              <div className={`w-6 h-6 border-2 ${l.cls}`} />
-              <span className="text-label text-text-secondary">{l.label}</span>
+            <div key={l.label} className="flex items-center gap-3">
+              <div className="scale-75 origin-left">
+                <TheaterSeat
+                  seat={{ row: '', col: 0, status: l.type as any, price: 0, category: '' }}
+                  isSelected={l.type === 'selected'}
+                  onClick={() => { }}
+                />
+              </div>
+              <span className="text-[12px] font-medium text-text-secondary/80 uppercase tracking-wider">{l.label}</span>
             </div>
           ))}
         </div>

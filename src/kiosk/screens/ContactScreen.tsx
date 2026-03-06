@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Smartphone, Mail } from 'lucide-react';
-import KioskHeader from '../components/KioskHeader';
 import KioskFooter from '../components/KioskFooter';
 
 interface Props {
@@ -24,7 +23,6 @@ export default function ContactScreen({ booking, updateBooking, goTo, goBack, re
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
-      <KioskHeader step={4} onBack={goBack} onCancel={resetBooking} />
 
       <div className="flex-1 flex flex-col items-center justify-center px-12">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
@@ -46,12 +44,11 @@ export default function ContactScreen({ booking, updateBooking, goTo, goBack, re
               key={i}
               onClick={() => k && handleKey(k)}
               disabled={!k}
-              className={`h-[72px] text-h2 font-semibold transition-all ${
-                !k ? '' :
+              className={`h-[72px] text-h2 font-semibold transition-all ${!k ? '' :
                 k === '⌫'
                   ? 'border-2 border-border text-text-secondary hover:border-primary'
                   : 'border-2 border-border bg-surface hover:border-primary hover:bg-surface-alt active:bg-primary active:border-primary'
-              }`}
+                }`}
             >
               {k}
             </button>
@@ -62,7 +59,7 @@ export default function ContactScreen({ booking, updateBooking, goTo, goBack, re
       <div className="px-6 pb-4">
         <div className="flex gap-4">
           <button
-            onClick={() => goTo('payment')}
+            onClick={() => goTo('paymentUPI')}
             className="flex-1 h-[72px] border-2 border-border text-text-secondary text-button-l hover:border-primary transition-colors"
           >
             Skip
@@ -70,14 +67,13 @@ export default function ContactScreen({ booking, updateBooking, goTo, goBack, re
           <button
             onClick={() => {
               updateBooking({ contactPhone: phone });
-              goTo('payment');
+              goTo('paymentUPI');
             }}
             disabled={phone.length !== 10}
-            className={`flex-1 h-[72px] text-button-l transition-all ${
-              phone.length === 10
-                ? 'bg-primary text-foreground hover:bg-primary-hover'
-                : 'bg-border text-disabled cursor-not-allowed'
-            }`}
+            className={`flex-1 h-[72px] text-button-l transition-all ${phone.length === 10
+              ? 'bg-primary text-foreground hover:bg-primary-hover'
+              : 'bg-border text-disabled cursor-not-allowed'
+              }`}
           >
             Continue
           </button>

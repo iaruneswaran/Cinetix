@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Clock, Star, Zap } from 'lucide-react';
 import { MOVIES } from '../types';
-import KioskHeader from '../components/KioskHeader';
 
 interface Props {
   goTo: (s: any) => void;
@@ -24,7 +23,6 @@ export default function HomeScreen({ goTo, updateBooking, resetBooking }: Props)
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
-      <KioskHeader showStepper={false} onCancel={resetBooking} />
 
       <div className="flex-1 overflow-auto px-6 pt-6 pb-6">
         {/* Search */}
@@ -57,11 +55,10 @@ export default function HomeScreen({ goTo, updateBooking, resetBooking }: Props)
             <button
               key={f}
               onClick={() => setSelectedFormat(f)}
-              className={`px-6 h-12 text-label font-medium border-2 shrink-0 transition-all ${
-                selectedFormat === f
-                  ? 'bg-primary border-primary text-foreground'
-                  : 'border-border text-text-secondary hover:border-primary'
-              }`}
+              className={`px-6 h-12 text-label font-medium border-2 shrink-0 transition-all ${selectedFormat === f
+                ? 'bg-primary border-primary text-foreground'
+                : 'border-border text-text-secondary hover:border-primary'
+                }`}
             >
               {f}
             </button>
@@ -94,7 +91,14 @@ export default function HomeScreen({ goTo, updateBooking, resetBooking }: Props)
                 className="w-full aspect-[2/3] mb-3 relative overflow-hidden border-2 border-transparent group-hover:border-primary transition-colors"
                 style={{ backgroundColor: movie.posterColor }}
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                {movie.posterUrl && (
+                  <img
+                    src={movie.posterUrl}
+                    alt={movie.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
                 <div className="absolute bottom-3 left-3 right-3">
                   <Star size={18} className="text-warning mb-1" fill="currentColor" />
                   <span className="text-label text-foreground">{movie.rating}</span>

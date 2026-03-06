@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { CheckCircle, QrCode, Printer, MessageSquare, RotateCcw } from 'lucide-react';
+import { CheckCircle, Printer, MessageSquare, RotateCcw } from 'lucide-react';
+import { QRCodeCanvas } from 'qrcode.react';
 
 interface Props {
   booking: any;
@@ -8,6 +9,8 @@ interface Props {
 }
 
 export default function SuccessScreen({ booking, resetBooking }: Props) {
+  const orderId = booking.orderId || 'CTX8HK39M2';
+
   return (
     <div className="w-full h-full bg-background flex flex-col items-center px-8 pt-16 overflow-auto">
       {/* Success icon */}
@@ -37,7 +40,7 @@ export default function SuccessScreen({ booking, resetBooking }: Props) {
         <div className="flex justify-between items-start mb-6">
           <div>
             <span className="text-label text-text-secondary">Order ID</span>
-            <p className="text-h3 font-mono">{booking.orderId || 'CTX8HK39M2'}</p>
+            <p className="text-h3 font-mono">{orderId}</p>
           </div>
           <div className="text-right">
             <span className="text-label text-text-secondary">Total Paid</span>
@@ -68,10 +71,13 @@ export default function SuccessScreen({ booking, resetBooking }: Props) {
 
         {/* QR code */}
         <div className="flex justify-center">
-          <div className="w-[200px] h-[200px] bg-foreground p-4">
-            <div className="w-full h-full bg-background flex items-center justify-center">
-              <QrCode size={100} className="text-foreground" strokeWidth={0.5} />
-            </div>
+          <div className="bg-white p-4 rounded-xl">
+            <QRCodeCanvas
+              value={orderId}
+              size={160}
+              level="M"
+              includeMargin={false}
+            />
           </div>
         </div>
         <p className="text-center text-body-s text-text-secondary mt-3">Show this QR at the entry gate</p>
@@ -90,7 +96,7 @@ export default function SuccessScreen({ booking, resetBooking }: Props) {
         </button>
         <button className="w-full h-[72px] border-2 border-primary text-primary text-button-l flex items-center justify-center gap-3 hover:bg-primary hover:text-foreground transition-colors">
           <MessageSquare size={28} strokeWidth={2} />
-          Send via SMS / Email
+          Send via SMS
         </button>
         <button
           onClick={resetBooking}

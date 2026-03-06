@@ -31,13 +31,10 @@ export default function ProcessingScreen({ booking, goTo, updateBooking }: Props
 
   return (
     <div className="w-full h-full bg-background flex flex-col items-center justify-center px-12">
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-        className="mb-12"
-      >
-        <Shield size={80} className="text-primary" strokeWidth={1} />
-      </motion.div>
+      <div className="h-32 mb-12 flex items-center justify-center">
+        {/* Removed rotating shield icon */}
+        <Loader2 size={64} className="animate-spin text-primary opacity-50" strokeWidth={1} />
+      </div>
 
       <h1 className="text-h1 mb-4">Processing Payment</h1>
       <p className="text-body-l text-warning mb-16">Do not remove your card</p>

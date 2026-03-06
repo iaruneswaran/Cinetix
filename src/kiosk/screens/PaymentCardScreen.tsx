@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CreditCard, Nfc, ArrowDown } from 'lucide-react';
-import KioskHeader from '../components/KioskHeader';
 
 interface Props {
   booking: any;
@@ -21,7 +20,6 @@ export default function PaymentCardScreen({ booking, goTo, goBack, resetBooking 
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
-      <KioskHeader step={5} onBack={goBack} onCancel={resetBooking} />
 
       <div className="flex-1 flex flex-col items-center justify-center px-12">
         <h1 className="text-h1 mb-2">Card Payment</h1>

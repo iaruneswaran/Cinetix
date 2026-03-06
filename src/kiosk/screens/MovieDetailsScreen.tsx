@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { Clock, Star, Film, Globe, Play } from 'lucide-react';
-import KioskHeader from '../components/KioskHeader';
 import KioskFooter from '../components/KioskFooter';
 
 interface Props {
@@ -16,13 +15,19 @@ export default function MovieDetailsScreen({ booking, goTo, goBack, resetBooking
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
-      <KioskHeader step={0} onBack={goBack} onCancel={resetBooking} />
 
       <div className="flex-1 overflow-auto">
         {/* Hero poster area */}
         <div className="relative h-[700px] overflow-hidden" style={{ backgroundColor: movie.posterColor }}>
+          {movie.posterUrl && (
+            <img
+              src={movie.posterUrl}
+              alt={movie.title}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-          
+
           {/* Play trailer button */}
           <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 border-2 border-foreground flex items-center justify-center bg-background/40 hover:bg-primary transition-colors">
             <Play size={40} strokeWidth={2} fill="currentColor" />
@@ -32,7 +37,7 @@ export default function MovieDetailsScreen({ booking, goTo, goBack, resetBooking
           <div className="absolute bottom-0 left-0 right-0 px-8 pb-8">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <h1 className="text-h1 mb-4">{movie.title}</h1>
-              
+
               <div className="flex flex-wrap gap-3 mb-6">
                 <div className="flex items-center gap-2 text-body-m text-text-secondary">
                   <Clock size={22} strokeWidth={2} />
@@ -66,8 +71,8 @@ export default function MovieDetailsScreen({ booking, goTo, goBack, resetBooking
         <div className="px-8 py-8">
           <h2 className="text-h3 mb-4">Synopsis</h2>
           <p className="text-body-m text-text-secondary leading-relaxed">
-            An epic cinematic experience that pushes the boundaries of storytelling. 
-            Witness breathtaking visuals and an unforgettable narrative that will keep you 
+            An epic cinematic experience that pushes the boundaries of storytelling.
+            Witness breathtaking visuals and an unforgettable narrative that will keep you
             on the edge of your seat from start to finish.
           </p>
 

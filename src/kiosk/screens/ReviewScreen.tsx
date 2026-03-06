@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Tag, Check } from 'lucide-react';
-import KioskHeader from '../components/KioskHeader';
 import KioskFooter from '../components/KioskFooter';
 
 interface Props {
@@ -24,7 +23,6 @@ export default function ReviewScreen({ booking, updateBooking, goTo, goBack, res
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
-      <KioskHeader step={4} onBack={goBack} onCancel={resetBooking} />
 
       <div className="flex-1 overflow-auto px-6 pt-6">
         <h1 className="text-h1 mb-8">Review & Summary</h1>

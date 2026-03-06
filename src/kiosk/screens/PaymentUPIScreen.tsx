@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { QrCode, CheckCircle, Loader2 } from 'lucide-react';
-import KioskHeader from '../components/KioskHeader';
+import { CheckCircle, Loader2 } from 'lucide-react';
+import { QRCodeCanvas } from 'qrcode.react';
 
 interface Props {
   booking: any;
@@ -12,6 +12,11 @@ interface Props {
 
 export default function PaymentUPIScreen({ booking, goTo, goBack, resetBooking }: Props) {
   const [status, setStatus] = useState<'waiting' | 'received' | 'confirmed'>('waiting');
+
+  const upiId = "iaruneswaran@upi";
+  const payeeName = "Cinetix";
+  const amount = booking.total.toFixed(2);
+  const upiUri = `upi://pay?pa=${upiId}&pn=${payeeName}&am=${amount}&cu=INR`;
 
   // Simulate payment
   useEffect(() => {
@@ -25,21 +30,23 @@ export default function PaymentUPIScreen({ booking, goTo, goBack, resetBooking }
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
-      <KioskHeader step={5} onBack={goBack} onCancel={resetBooking} />
 
       <div className="flex-1 flex flex-col items-center justify-center px-12">
         <h1 className="text-h1 mb-2">Scan & Pay</h1>
         <p className="text-body-l text-text-secondary mb-10">Scan the QR with your UPI app</p>
 
-        {/* QR Code placeholder */}
+        {/* QR Code */}
         <motion.div
           animate={status === 'waiting' ? { boxShadow: ['0 0 20px hsl(357 91% 47% / 0.3)', '0 0 40px hsl(357 91% 47% / 0.6)', '0 0 20px hsl(357 91% 47% / 0.3)'] } : {}}
           transition={{ duration: 2, repeat: Infinity }}
-          className="w-[400px] h-[400px] bg-foreground p-8 mb-10"
+          className="bg-white p-6 mb-10 rounded-2xl"
         >
-          <div className="w-full h-full bg-background flex items-center justify-center">
-            <QrCode size={200} className="text-foreground" strokeWidth={0.5} />
-          </div>
+          <QRCodeCanvas
+            value={upiUri}
+            size={300}
+            level="H"
+            includeMargin={false}
+          />
         </motion.div>
 
         {/* Amount */}

@@ -35,11 +35,10 @@ export default function KioskHeader({ step, totalSteps = 6, stepLabels = STEPS, 
             <div key={i} className="flex items-center">
               <div className="flex flex-col items-center">
                 <div
-                  className={`w-8 h-8 flex items-center justify-center text-label font-bold border-2 transition-colors ${
-                    i < step ? 'bg-primary border-primary text-foreground' :
-                    i === step ? 'border-primary text-primary' :
-                    'border-border text-disabled'
-                  }`}
+                  className={`w-8 h-8 flex items-center justify-center text-label font-bold border-2 transition-colors ${i < step ? 'bg-primary border-primary text-foreground' :
+                      i === step ? 'border-primary text-primary' :
+                        'border-border text-disabled'
+                    }`}
                 >
                   {i + 1}
                 </div>
@@ -56,7 +55,7 @@ export default function KioskHeader({ step, totalSteps = 6, stepLabels = STEPS, 
       )}
 
       {/* Right */}
-      <div className="flex items-center gap-3 w-[200px] justify-end">
+      <div className="flex items-center gap-3 w-[200px] justify-end ml-auto">
         <button className="w-12 h-12 flex items-center justify-center border-2 border-border hover:border-primary transition-colors">
           <Globe size={24} strokeWidth={2} />
         </button>

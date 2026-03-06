@@ -19,6 +19,8 @@ import SuccessScreen from './screens/SuccessScreen';
 import FailureScreen from './screens/FailureScreen';
 import TimeoutScreen from './screens/TimeoutScreen';
 
+import KioskHeader from './components/KioskHeader';
+
 const initialBooking: BookingState = {
   movie: null,
   date: '',
@@ -37,7 +39,7 @@ const initialBooking: BookingState = {
 const FLOW_SCREENS: KioskScreen[] = [
   'attract', 'language', 'home', 'movieDetails', 'dateTime',
   'seatCount', 'seatSelection', 'addons', 'review', 'contact',
-  'payment', 'paymentUPI', 'processing', 'success',
+  'paymentUPI', 'processing', 'success',
 ];
 
 export default function KioskShell() {
@@ -65,7 +67,7 @@ export default function KioskShell() {
   // Inactivity timer (disabled on attract/processing/success)
   useEffect(() => {
     if (['attract', 'processing', 'success', 'timeout'].includes(screen)) return;
-    
+
     const resetTimer = () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       setShowTimeout(false);
@@ -142,26 +144,69 @@ export default function KioskShell() {
     }
   };
 
+  // Header configuration
+  const getHeaderProps = () => {
+    const noHeaderScreens: KioskScreen[] = ['attract', 'language', 'processing', 'success', 'failure', 'timeout'];
+    if (noHeaderScreens.includes(screen)) return null;
+
+    const props: any = {
+      onCancel: resetBooking,
+      showStepper: true,
+    };
+
+    if (screen === 'home') {
+      props.showStepper = false;
+    } else {
+      props.onBack = goBack;
+    }
+
+    // Step indices
+    const stepMap: Record<string, number> = {
+      'movieDetails': 0,
+      'dateTime': 1,
+      'seatCount': 2,
+      'seatSelection': 2,
+      'addons': 3,
+      'review': 4,
+      'contact': 4,
+      'payment': 5,
+      'paymentUPI': 5,
+      'paymentCard': 5,
+    };
+
+    if (stepMap[screen] !== undefined) {
+      props.step = stepMap[screen];
+    }
+
+    return props;
+  };
+
+  const headerProps = getHeaderProps();
+
   return (
     <div ref={containerRef} className="w-screen h-screen bg-background overflow-hidden relative">
       <div
-        className="kiosk-frame"
+        className="kiosk-frame flex flex-col"
         style={{ transform: `scale(${scale})` }}
       >
-        <AnimatePresence mode="wait" custom={direction}>
-          <motion.div
-            key={screen}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="absolute inset-0"
-          >
-            {renderScreen()}
-          </motion.div>
-        </AnimatePresence>
+        {headerProps && <KioskHeader {...headerProps} />}
+
+        <div className="flex-1 relative overflow-hidden">
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={screen}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="absolute inset-0"
+            >
+              {renderScreen()}
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
         {/* Timeout warning overlay */}
         {showTimeout && (
