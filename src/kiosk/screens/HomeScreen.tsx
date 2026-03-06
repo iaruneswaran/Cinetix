@@ -95,6 +95,8 @@ export default function HomeScreen({ goTo, updateBooking, resetBooking }: Props)
                   <img
                     src={movie.posterUrl}
                     alt={movie.title}
+                    loading="eager"
+                    decoding="async"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 )}

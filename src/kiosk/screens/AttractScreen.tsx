@@ -6,7 +6,15 @@ interface Props {
   goTo: (s: any) => void;
 }
 
-const posterColors = ['#1a237e', '#bf360c', '#212121', '#1b5e20', '#4a148c', '#b71c1c'];
+// Preload all movie poster images at module load time
+const preloadedImages: HTMLImageElement[] = [];
+MOVIES.forEach(movie => {
+  if (movie.posterUrl) {
+    const img = new Image();
+    img.src = movie.posterUrl;
+    preloadedImages.push(img);
+  }
+});
 
 export default function AttractScreen({ goTo }: Props) {
   const [current, setCurrent] = useState(0);
@@ -39,6 +47,8 @@ export default function AttractScreen({ goTo }: Props) {
           <img
             src={movie.posterUrl}
             alt={movie.title}
+            loading="eager"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover"
           />
         )}
