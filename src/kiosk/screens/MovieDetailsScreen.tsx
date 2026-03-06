@@ -23,6 +23,8 @@ export default function MovieDetailsScreen({ booking, goTo, goBack, resetBooking
             <img
               src={movie.posterUrl}
               alt={movie.title}
+              loading="eager"
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover"
             />
           )}
