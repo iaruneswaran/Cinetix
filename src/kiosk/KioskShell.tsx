@@ -46,7 +46,12 @@ export default function KioskShell() {
   const [screen, setScreen] = useState<KioskScreen>('attract');
   const [booking, setBooking] = useState<BookingState>(initialBooking);
   const [direction, setDirection] = useState(1);
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(() => {
+    if (typeof window !== 'undefined' && window.innerWidth && window.innerHeight) {
+      return Math.max(0.1, Math.min(window.innerWidth / 1080, window.innerHeight / 1920));
+    }
+    return 1;
+  });
   const containerRef = useRef<HTMLDivElement>(null);
   const [inactivityTimer, setInactivityTimer] = useState<number | null>(null);
   const [showTimeout, setShowTimeout] = useState(false);
@@ -55,9 +60,11 @@ export default function KioskShell() {
   // Calculate scale
   useEffect(() => {
     function updateScale() {
-      const sw = window.innerWidth / 1080;
-      const sh = window.innerHeight / 1920;
-      setScale(Math.min(sw, sh));
+      if (window.innerWidth && window.innerHeight) {
+        const sw = window.innerWidth / 1080;
+        const sh = window.innerHeight / 1920;
+        setScale(Math.max(0.1, Math.min(sw, sh)));
+      }
     }
     updateScale();
     window.addEventListener('resize', updateScale);
@@ -187,7 +194,7 @@ export default function KioskShell() {
     <div ref={containerRef} className="w-screen h-screen bg-background overflow-hidden relative">
       <div
         className="kiosk-frame flex flex-col"
-        style={{ transform: `scale(${scale})` }}
+        style={{ transform: `translate(-50%, -50%) scale(${scale})` }}
       >
         {headerProps && <KioskHeader {...headerProps} />}
 
