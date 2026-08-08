@@ -37,10 +37,10 @@ export default function DateTimeScreen({ booking, updateBooking, goTo, goBack, r
   return (
     <div className="w-full h-full bg-background flex flex-col">
 
-      <div className="flex-1 overflow-auto px-6 pt-6 pb-6">
+      <div className="flex-1 overflow-auto px-3 sm:px-6 pt-4 sm:pt-6 pb-6">
         {/* Movie mini banner with Poster Image */}
-        <div className="flex items-center gap-4 p-3 bg-surface border border-border mb-6">
-          <div className="w-16 h-20 shrink-0 relative overflow-hidden border border-border" style={{ backgroundColor: booking.movie?.posterColor }}>
+        <div className="flex items-center gap-3.5 p-3 bg-surface border border-border mb-5 sm:mb-6">
+          <div className="w-14 h-18 sm:w-16 sm:h-20 shrink-0 relative overflow-hidden border border-border" style={{ backgroundColor: booking.movie?.posterColor }}>
             {booking.movie?.posterUrl && (
               <img
                 src={booking.movie.posterUrl}
@@ -49,36 +49,36 @@ export default function DateTimeScreen({ booking, updateBooking, goTo, goBack, r
               />
             )}
           </div>
-          <div>
-            <h3 className="text-sm font-bold mb-1">{booking.movie?.title}</h3>
-            <p className="text-xs text-text-secondary">{booking.movie?.format} • {booking.movie?.language} • {booking.movie?.duration}</p>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-xs sm:text-sm font-bold mb-1 truncate">{booking.movie?.title}</h3>
+            <p className="text-[11px] sm:text-xs text-text-secondary truncate">{booking.movie?.format} • {booking.movie?.language} • {booking.movie?.duration}</p>
           </div>
         </div>
 
         {/* Date rail */}
-        <h2 className="text-base font-bold mb-3">Select Date</h2>
-        <div className="flex gap-2.5 mb-6 overflow-x-auto pb-1">
+        <h2 className="text-sm sm:text-base font-bold mb-2.5">Select Date</h2>
+        <div className="flex gap-2 mb-5 sm:mb-6 overflow-x-auto pb-1 scrollbar-none">
           {DATES.map(d => (
             <button
               key={d.full}
               onClick={() => setSelectedDate(d.full)}
-              className={`min-w-[90px] h-[64px] flex flex-col items-center justify-center border shrink-0 transition-all ${selectedDate === d.full
+              className={`min-w-[76px] sm:min-w-[90px] h-[58px] sm:h-[64px] flex flex-col items-center justify-center border shrink-0 transition-all ${selectedDate === d.full
                 ? 'bg-primary border-primary text-foreground'
                 : 'border-border text-text-secondary hover:border-primary'
                 }`}
             >
-              <span className="text-[11px]">{d.isToday ? 'Today' : d.day}</span>
-              <span className="text-base font-bold leading-none my-0.5">{d.date}</span>
-              <span className="text-[10px]">{d.month}</span>
+              <span className="text-[10px] sm:text-[11px]">{d.isToday ? 'Today' : d.day}</span>
+              <span className="text-sm sm:text-base font-bold leading-none my-0.5">{d.date}</span>
+              <span className="text-[9px] sm:text-[10px]">{d.month}</span>
             </button>
           ))}
         </div>
 
         {/* Showtimes */}
-        <h2 className="text-base font-bold mb-1">Select Showtime</h2>
-        <p className="text-xs text-text-secondary mb-3">CINETIX Multiplex • Screen Assigned at Booking</p>
+        <h2 className="text-sm sm:text-base font-bold mb-0.5">Select Showtime</h2>
+        <p className="text-[11px] sm:text-xs text-text-secondary mb-3">CINETIX Multiplex • Screen Assigned at Booking</p>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3">
           {SHOWTIMES.map((st, i) => (
             <motion.button
               key={i}
@@ -86,7 +86,7 @@ export default function DateTimeScreen({ booking, updateBooking, goTo, goBack, r
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
               onClick={() => setSelectedShowtime(i)}
-              className={`p-3 border text-left transition-all ${selectedShowtime === i
+              className={`p-2.5 sm:p-3 border text-left transition-all ${selectedShowtime === i
                 ? 'bg-primary border-primary'
                 : st.availability === 'almost-full'
                   ? 'border-destructive/40 hover:border-primary'
@@ -94,16 +94,16 @@ export default function DateTimeScreen({ booking, updateBooking, goTo, goBack, r
                 }`}
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="text-base font-bold">{st.time}</span>
+                <span className="text-sm sm:text-base font-bold">{st.time}</span>
                 {availabilityBadge(st.availability)}
               </div>
-              <div className="flex items-center gap-2 text-xs text-text-secondary">
+              <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-text-secondary">
                 <span>{st.format}</span>
                 <span>•</span>
                 <span>{st.screen}</span>
               </div>
               <div className="mt-1">
-                <span className="text-xs font-semibold">₹{st.price}</span>
+                <span className="text-xs sm:text-sm font-semibold">₹{st.price}</span>
                 <span className="text-[10px] text-text-secondary ml-1">onwards</span>
               </div>
             </motion.button>
@@ -122,9 +122,9 @@ export default function DateTimeScreen({ booking, updateBooking, goTo, goBack, r
         }}
         leftContent={
           selectedShowtime !== null ? (
-            <div>
-              <span className="text-body-s text-text-secondary">{SHOWTIMES[selectedShowtime].time}</span>
-              <span className="text-h3 ml-3">₹{SHOWTIMES[selectedShowtime].price}</span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-text-secondary">{SHOWTIMES[selectedShowtime].time}</span>
+              <span className="text-sm sm:text-base font-bold text-foreground">₹{SHOWTIMES[selectedShowtime].price}</span>
             </div>
           ) : null
         }

@@ -30,29 +30,29 @@ export default function PaymentUPIScreen({ booking, goTo, goBack, resetBooking }
   return (
     <div className="w-full h-full bg-background flex flex-col">
 
-      <div className="flex-1 flex flex-col items-center justify-center px-6">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 overflow-y-auto">
         {/* CINETIX Branding */}
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-lg font-black tracking-widest text-primary uppercase">CINETIX</span>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-base sm:text-lg font-black tracking-widest text-primary uppercase">CINETIX</span>
           <span className="text-xs text-text-secondary border-l border-border pl-2 uppercase font-medium">Express UPI Pay</span>
         </div>
 
-        <h1 className="text-xl font-bold mb-1">Scan & Pay</h1>
-        <p className="text-xs text-text-secondary mb-6">Scan the QR code using any UPI app (GPay, PhonePe, Paytm)</p>
+        <h1 className="text-lg sm:text-xl font-bold mb-1">Scan & Pay</h1>
+        <p className="text-xs text-text-secondary mb-4 sm:mb-6 text-center max-w-[300px]">Scan the QR code using any UPI app (GPay, PhonePe, Paytm)</p>
 
         {/* QR Code Container with 1px border */}
-        <div className="bg-white p-4 mb-4 border border-border">
+        <div className="bg-white p-3 sm:p-4 mb-4 border border-border">
           <QRCodeCanvas
             value={upiUri}
-            size={210}
+            size={180}
             level="H"
             includeMargin={false}
           />
         </div>
 
         {/* Amount */}
-        <div className="text-xs text-text-secondary mb-1 uppercase tracking-wider font-semibold">Total Amount</div>
-        <div className="text-2xl font-bold text-primary mb-5">₹{booking.total}</div>
+        <div className="text-[11px] sm:text-xs text-text-secondary mb-0.5 uppercase tracking-wider font-semibold">Total Amount</div>
+        <div className="text-xl sm:text-2xl font-bold text-primary mb-4 sm:mb-5">₹{booking.total}</div>
 
         {/* Status */}
         <div className="flex items-center gap-2.5 bg-surface border border-border px-5 py-2.5">

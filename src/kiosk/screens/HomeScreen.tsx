@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Clock, Star, Zap, MapPin, Building2, ChevronDown, Check, X } from 'lucide-react';
+import { Search, MapPin, Building2, ChevronDown, Check, X, Star } from 'lucide-react';
 import { MOVIES } from '../types';
 import { toast } from 'sonner';
 
@@ -64,60 +64,73 @@ export default function HomeScreen({ goTo, updateBooking, resetBooking }: Props)
   const [citySearch, setCitySearch] = useState('');
   const [theaterSearch, setTheaterSearch] = useState('');
 
-  const filtered = MOVIES.filter(m => {
+  const nowShowing = MOVIES.filter(m => {
+    const isUpcoming = Boolean(m.isUpcoming);
     const matchSearch = m.title.toLowerCase().includes(search.toLowerCase());
     const matchFormat = selectedFormat === 'All' || m.format === selectedFormat;
-    return matchSearch && matchFormat;
+    return !isUpcoming && matchSearch && matchFormat;
+  });
+
+  const upcomingMovies = MOVIES.filter(m => {
+    const isUpcoming = Boolean(m.isUpcoming);
+    const matchSearch = m.title.toLowerCase().includes(search.toLowerCase());
+    const matchFormat = selectedFormat === 'All' || m.format === selectedFormat;
+    return isUpcoming && matchSearch && matchFormat;
   });
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
 
-      <div className="flex-1 overflow-auto px-6 pt-5 pb-6">
-        {/* Location & Theater Selector Bar (Unwrapped) */}
-        <div className="flex flex-wrap items-center gap-3 mb-5">
+      <div className="flex-1 overflow-auto px-3 sm:px-6 pt-4 sm:pt-5 pb-6">
+        {/* Location, Theater Selector & Search Bar */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 mb-4 sm:mb-5">
           {/* Location Selector Button */}
           <button
             onClick={() => setShowLocationModal(true)}
-            className="flex items-center gap-2 px-3.5 h-9 bg-surface border border-border hover:border-primary transition-colors text-xs font-semibold"
+            style={{ height: '44px', minHeight: '44px' }}
+            className="flex items-center justify-between gap-2.5 px-3.5 h-[44px] min-h-[44px] shrink-0 bg-surface border border-border hover:border-primary transition-colors text-xs font-semibold w-full sm:flex-1 min-w-0"
           >
-            <MapPin size={15} className="text-primary" />
-            <span className="text-foreground">{selectedCity}</span>
-            <ChevronDown size={14} className="text-text-secondary ml-1" />
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+              <MapPin size={18} className="text-primary shrink-0" />
+              <span className="text-foreground truncate">{selectedCity}</span>
+            </div>
+            <ChevronDown size={14} className="text-text-secondary shrink-0 ml-1" />
           </button>
 
           {/* Theater Selector Button */}
           <button
             onClick={() => setShowTheaterModal(true)}
-            className="flex items-center gap-2 px-3.5 h-9 bg-surface border border-border hover:border-primary transition-colors text-xs font-semibold flex-1 min-w-[220px]"
+            style={{ height: '44px', minHeight: '44px' }}
+            className="flex items-center justify-between gap-2.5 px-3.5 h-[44px] min-h-[44px] shrink-0 bg-surface border border-border hover:border-primary transition-colors text-xs font-semibold w-full sm:flex-1 min-w-0"
           >
-            <Building2 size={15} className="text-primary shrink-0" />
-            <span className="text-foreground truncate">{selectedTheater}</span>
-            <ChevronDown size={14} className="text-text-secondary ml-auto shrink-0" />
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+              <Building2 size={18} className="text-primary shrink-0" />
+              <span className="text-foreground truncate">{selectedTheater}</span>
+            </div>
+            <ChevronDown size={14} className="text-text-secondary shrink-0 ml-1" />
           </button>
-        </div>
 
-        {/* Search Bar */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="flex-1 relative">
+          {/* Search Bar (Right side of Theater Selection) */}
+          <div className="flex-1 relative min-w-0 sm:min-w-[200px]" style={{ height: '44px', minHeight: '44px' }}>
             <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-disabled" />
             <input
               type="text"
               placeholder="Search movies..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full h-10 bg-surface border border-border pl-10 pr-4 text-xs text-foreground placeholder:text-disabled focus:border-primary focus:outline-none transition-colors"
+              style={{ height: '44px', minHeight: '44px' }}
+              className="w-full h-[44px] min-h-[44px] bg-surface border border-border pl-10 pr-4 text-xs text-foreground placeholder:text-disabled focus:border-primary focus:outline-none transition-colors"
             />
           </div>
         </div>
 
         {/* Format Filter Bar */}
-        <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
+        <div className="flex items-center gap-2 mb-5 sm:mb-6 overflow-x-auto pb-1 scrollbar-none">
           {FORMATS.map(f => (
             <button
               key={f}
               onClick={() => setSelectedFormat(f)}
-              className={`px-4 h-8 text-xs font-medium border transition-all shrink-0 ${
+              className={`px-3.5 sm:px-4 h-8 text-xs font-medium border transition-all shrink-0 ${
                 selectedFormat === f
                   ? 'bg-primary border-primary text-foreground'
                   : 'bg-surface border-border text-text-secondary hover:border-primary hover:text-foreground'
@@ -128,20 +141,20 @@ export default function HomeScreen({ goTo, updateBooking, resetBooking }: Props)
           ))}
         </div>
 
-        {/* Now Showing Section Header */}
+        {/* Section 1: Now Showing */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-[3px] h-[19px] bg-primary" />
             <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">Now Showing</h2>
           </div>
           <span className="text-xs text-text-secondary font-medium">
-            {filtered.length} Movies
+            {nowShowing.length} Movies
           </span>
         </div>
 
-        {/* Movie Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {filtered.map((movie, i) => (
+        {/* Now Showing Movie Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 mb-8">
+          {nowShowing.map((movie, i) => (
             <motion.button
               key={movie.id}
               initial={{ opacity: 0, y: 20 }}
@@ -153,74 +166,138 @@ export default function HomeScreen({ goTo, updateBooking, resetBooking }: Props)
               }}
               className="text-left group"
             >
-              {/* Poster with 1px red stroke */}
+              {/* Poster Card */}
               <div
-                className="w-full aspect-[2/3] mb-2.5 relative overflow-hidden border border-primary transition-colors"
+                className="w-full aspect-[2/3] mb-2 relative overflow-hidden border border-primary transition-colors"
                 style={{ backgroundColor: movie.posterColor }}
               >
-                {movie.posterUrl && (
-                  <img
-                    src={movie.posterUrl}
-                    alt={movie.title}
-                    loading="eager"
-                    decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-                <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center gap-1">
-                  <Star size={14} className="text-warning" fill="currentColor" />
-                  <span className="text-xs font-medium text-foreground">{movie.rating}</span>
+                <img
+                  src={movie.posterUrl}
+                  alt={movie.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+
+                {/* Top format tag badge (Solid Red Fill) */}
+                <div className="absolute top-2 left-2 z-10">
+                  <span className="px-2 py-0.5 bg-primary text-foreground text-[10px] font-extrabold uppercase tracking-wider shadow-md inline-block">
+                    {movie.format}
+                  </span>
                 </div>
-                {/* Format badge */}
-                <div className="absolute top-2.5 right-2.5 bg-primary text-foreground text-[11px] font-bold px-2 py-0.5">
-                  {movie.format}
+
+                {/* Bottom rating compact pill (Non-wrapping auto-width box) */}
+                <div className="absolute bottom-2 left-2 z-10 flex items-center gap-1.5 pointer-events-none">
+                  <span className="px-2 py-0.5 bg-background/90 backdrop-blur-md border border-border/80 text-foreground text-[11px] font-bold flex items-center gap-1 shrink-0 whitespace-nowrap shadow-sm">
+                    <Star size={11} className="text-primary fill-primary shrink-0" />
+                    <span>{movie.rating}</span>
+                  </span>
                 </div>
               </div>
-              <h3 className="text-sm font-semibold leading-snug mb-0.5 line-clamp-2">{movie.title}</h3>
-              <p className="text-xs text-text-secondary">{movie.genre} • {movie.duration}</p>
+              <h3 className="text-xs sm:text-sm font-semibold leading-snug mb-0.5 line-clamp-2">{movie.title}</h3>
+              <p className="text-[11px] text-text-secondary">{movie.genre} • {movie.duration}</p>
             </motion.button>
           ))}
         </div>
+
+        {/* Section 2: Upcoming Movies */}
+        {upcomingMovies.length > 0 && (
+          <>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-[3px] h-[19px] bg-primary" />
+                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">Upcoming Movies</h2>
+              </div>
+              <span className="text-xs text-text-secondary font-medium">
+                {upcomingMovies.length} Movies
+              </span>
+            </div>
+
+            {/* Upcoming Movie Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+              {upcomingMovies.map((movie, i) => (
+                <motion.button
+                  key={movie.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  onClick={() => {
+                    updateBooking({ movie });
+                    goTo('movieDetails');
+                  }}
+                  className="text-left group"
+                >
+                  {/* Poster Card */}
+                  <div
+                    className="w-full aspect-[2/3] mb-2 relative overflow-hidden border border-primary transition-colors"
+                    style={{ backgroundColor: movie.posterColor }}
+                  >
+                    <img
+                      src={movie.posterUrl}
+                      alt={movie.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+
+                    {/* Top format tag badge (Solid Red Fill) */}
+                    <div className="absolute top-2 left-2 z-10">
+                      <span className="px-2 py-0.5 bg-primary text-foreground text-[10px] font-extrabold uppercase tracking-wider shadow-md inline-block">
+                        {movie.format}
+                      </span>
+                    </div>
+
+                    {/* Bottom Release Date Pill */}
+                    <div className="absolute bottom-2 left-2 z-10 flex items-center gap-1.5 pointer-events-none">
+                      <span className="px-2 py-0.5 bg-background/90 backdrop-blur-md border border-primary/60 text-primary text-[10px] font-bold flex items-center gap-1 shrink-0 whitespace-nowrap shadow-sm">
+                        <span>{movie.releaseDate}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <h3 className="text-xs sm:text-sm font-semibold leading-snug mb-0.5 line-clamp-2">{movie.title}</h3>
+                  <p className="text-[11px] text-text-secondary">{movie.genre} • {movie.duration}</p>
+                </motion.button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
-      {/* Location / City Selection Modal (BookMyShow Style) */}
+      {/* Location / City Selection Modal */}
       {showLocationModal && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 p-6">
-          <div className="bg-surface border border-border p-8 max-w-[800px] w-full shadow-2xl">
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 sm:p-6">
+          <div className="bg-surface border border-border p-4 sm:p-6 md:p-8 max-w-[800px] w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between mb-5 pb-3.5 border-b border-border">
-              <div className="flex items-center gap-3">
-                <MapPin size={22} className="text-primary" />
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
+              <div className="flex items-center gap-2.5">
+                <MapPin size={20} className="text-primary" />
                 <div>
-                  <h3 className="text-lg font-bold">Select Your City</h3>
-                  <p className="text-xs text-text-secondary mt-0.5">Detecting location or select popular cities</p>
+                  <h3 className="text-base sm:text-lg font-bold">Select Your City</h3>
+                  <p className="text-[11px] sm:text-xs text-text-secondary">Detecting location or select popular cities</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowLocationModal(false)}
-                className="w-9 h-9 flex items-center justify-center text-text-secondary hover:text-foreground hover:bg-background border border-border transition-colors"
+                className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-text-secondary hover:text-foreground hover:bg-background border border-border transition-colors"
               >
                 <X size={18} />
               </button>
             </div>
 
             {/* City Search Bar */}
-            <div className="relative mb-6">
+            <div className="relative mb-5">
               <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-disabled" />
               <input
                 type="text"
                 placeholder="Search for your city..."
                 value={citySearch}
                 onChange={e => setCitySearch(e.target.value)}
-                className="w-full h-11 bg-background border border-border pl-11 pr-4 text-xs text-foreground placeholder:text-disabled focus:border-primary focus:outline-none"
+                className="w-full h-10 sm:h-11 bg-background border border-border pl-11 pr-4 text-xs text-foreground placeholder:text-disabled focus:border-primary focus:outline-none"
               />
             </div>
 
             {/* Popular Cities Section */}
             <div>
-              <span className="text-xs font-bold text-text-secondary uppercase tracking-wider block mb-4">Popular Cities</span>
-              <div className="grid grid-cols-3 gap-4">
+              <span className="text-xs font-bold text-text-secondary uppercase tracking-wider block mb-3">Popular Cities</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {CITIES_DATA.filter(c => c.name.toLowerCase().includes(citySearch.toLowerCase())).map(city => (
                   <button
                     key={city.name}
@@ -230,17 +307,17 @@ export default function HomeScreen({ goTo, updateBooking, resetBooking }: Props)
                       setShowLocationModal(false);
                       toast.success(`Location set to ${city.name}`);
                     }}
-                    className={`p-4 text-left border flex flex-col justify-between h-[82px] transition-all group ${
+                    className={`p-3.5 text-left border flex flex-col justify-between h-[76px] transition-all group ${
                       selectedCity === city.name
                         ? 'bg-primary/10 border-primary text-primary'
                         : 'border-border bg-background hover:border-primary hover:bg-surface-alt/50 text-text-secondary hover:text-foreground'
                     }`}
                   >
                     <div className="flex items-center justify-between w-full">
-                      <span className="text-sm font-bold">{city.name}</span>
+                      <span className="text-xs sm:text-sm font-bold">{city.name}</span>
                       {selectedCity === city.name && <Check size={16} className="text-primary" />}
                     </div>
-                    <span className="text-xs text-text-secondary/70 truncate">{city.tag}</span>
+                    <span className="text-[11px] text-text-secondary/70 truncate">{city.tag}</span>
                   </button>
                 ))}
               </div>
@@ -249,42 +326,42 @@ export default function HomeScreen({ goTo, updateBooking, resetBooking }: Props)
         </div>
       )}
 
-      {/* Theater Selection Modal (BookMyShow Style) */}
+      {/* Theater Selection Modal */}
       {showTheaterModal && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 p-6">
-          <div className="bg-surface border border-border p-8 max-w-[800px] w-full shadow-2xl">
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 sm:p-6">
+          <div className="bg-surface border border-border p-4 sm:p-6 md:p-8 max-w-[800px] w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between mb-5 pb-3.5 border-b border-border">
-              <div className="flex items-center gap-3">
-                <Building2 size={22} className="text-primary" />
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
+              <div className="flex items-center gap-2.5">
+                <Building2 size={20} className="text-primary" />
                 <div>
-                  <h3 className="text-lg font-bold">Select Theater in {selectedCity}</h3>
-                  <p className="text-xs text-text-secondary mt-0.5">Multiplexes, screen formats, and available facilities</p>
+                  <h3 className="text-base sm:text-lg font-bold">Select Theater in {selectedCity}</h3>
+                  <p className="text-[11px] sm:text-xs text-text-secondary">Multiplexes, screen formats, and available facilities</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowTheaterModal(false)}
-                className="w-9 h-9 flex items-center justify-center text-text-secondary hover:text-foreground hover:bg-background border border-border transition-colors"
+                className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-text-secondary hover:text-foreground hover:bg-background border border-border transition-colors"
               >
                 <X size={18} />
               </button>
             </div>
 
             {/* Theater Search Bar */}
-            <div className="relative mb-6">
+            <div className="relative mb-5">
               <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-disabled" />
               <input
                 type="text"
                 placeholder={`Search for theaters in ${selectedCity}...`}
                 value={theaterSearch}
                 onChange={e => setTheaterSearch(e.target.value)}
-                className="w-full h-11 bg-background border border-border pl-11 pr-4 text-xs text-foreground placeholder:text-disabled focus:border-primary focus:outline-none"
+                className="w-full h-10 sm:h-11 bg-background border border-border pl-11 pr-4 text-xs text-foreground placeholder:text-disabled focus:border-primary focus:outline-none"
               />
             </div>
 
             {/* Theater List Section */}
             <div className="max-h-[360px] overflow-auto pr-1">
-              <span className="text-xs font-bold text-text-secondary uppercase tracking-wider block mb-4">Multiplexes ({selectedCity})</span>
+              <span className="text-xs font-bold text-text-secondary uppercase tracking-wider block mb-3">Multiplexes ({selectedCity})</span>
               <div className="flex flex-col gap-3">
                 {(THEATERS[selectedCity] || [])
                   .filter(th => th.toLowerCase().includes(theaterSearch.toLowerCase()))
@@ -298,21 +375,21 @@ export default function HomeScreen({ goTo, updateBooking, resetBooking }: Props)
                           setShowTheaterModal(false);
                           toast.success(`Theater set to ${th}`);
                         }}
-                        className={`p-4 text-left border flex items-center justify-between transition-all group ${
+                        className={`p-3.5 sm:p-4 text-left border flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all group ${
                           selectedTheater === th
                             ? 'bg-primary/10 border-primary text-primary'
                             : 'border-border bg-background hover:border-primary hover:bg-surface-alt/50 text-text-secondary hover:text-foreground'
                         }`}
                       >
                         <div className="flex flex-col gap-1.5">
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">{th}</span>
-                            {selectedTheater === th && <Check size={16} className="text-primary" />}
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-xs sm:text-sm font-bold text-foreground group-hover:text-primary transition-colors">{th}</span>
+                            {selectedTheater === th && <Check size={16} className="text-primary shrink-0" />}
                           </div>
-                          <span className="text-xs text-text-secondary/80">{info.address}</span>
+                          <span className="text-[11px] text-text-secondary/80">{info.address}</span>
                           
                           {/* Format and facility badges */}
-                          <div className="flex flex-wrap gap-2 mt-1">
+                          <div className="flex flex-wrap gap-1.5 mt-1">
                             {info.formats.map(f => (
                               <span key={f} className="px-2 py-0.5 border border-primary/40 bg-primary/10 text-primary text-[10px] font-bold">
                                 {f}
@@ -325,8 +402,8 @@ export default function HomeScreen({ goTo, updateBooking, resetBooking }: Props)
                             ))}
                           </div>
                         </div>
-                        <div className="text-right shrink-0 ml-4">
-                          <span className="px-3 py-1.5 border border-border bg-surface hover:border-primary text-xs font-semibold text-foreground">
+                        <div className="text-right shrink-0 self-end sm:self-auto">
+                          <span className="px-3 py-1.5 border border-border bg-surface hover:border-primary text-xs font-semibold text-foreground inline-block">
                             {selectedTheater === th ? 'Selected' : 'Select'}
                           </span>
                         </div>

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Star, Film, Globe, Volume2, VolumeX } from 'lucide-react';
+import { Clock, Star, Film, Globe, Volume2, VolumeX, Bell, Check } from 'lucide-react';
 import KioskFooter from '../components/KioskFooter';
+import { toast } from 'sonner';
 
 interface Props {
   booking: any;
@@ -13,11 +14,22 @@ interface Props {
 export default function MovieDetailsScreen({ booking, goTo, goBack, resetBooking }: Props) {
   const movie = booking.movie;
   const [isMuted, setIsMuted] = useState(true);
+  const [isNotified, setIsNotified] = useState(false);
 
   if (!movie) return null;
 
-  // YouTube trailer ID for Sisu: Road to Revenge (https://www.youtube.com/watch?v=VmStqCXIgio)
+  const isUpcoming = Boolean(movie.isUpcoming);
   const videoId = movie.trailerId || 'VmStqCXIgio';
+
+  const handleNotify = () => {
+    if (!isNotified) {
+      setIsNotified(true);
+      toast.success(`You will be notified when tickets open for ${movie.title}!`);
+    } else {
+      setIsNotified(false);
+      toast.info(`Notification disabled for ${movie.title}`);
+    }
+  };
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
@@ -113,13 +125,20 @@ export default function MovieDetailsScreen({ booking, goTo, goBack, resetBooking
       </div>
 
       <KioskFooter
-        ctaLabel="Book Tickets"
-        onCta={() => goTo('dateTime')}
+        ctaLabel={isUpcoming ? (isNotified ? 'Notified ✓' : 'Notify Me') : 'Book Tickets'}
+        onCta={isUpcoming ? handleNotify : () => goTo('dateTime')}
         leftContent={
-          <div>
-            <span className="text-xs text-text-secondary block">Starting from</span>
-            <span className="text-sm font-bold text-foreground">₹250</span>
-          </div>
+          isUpcoming ? (
+            <div>
+              <span className="text-xs text-text-secondary block">Releasing In</span>
+              <span className="text-sm font-bold text-primary">{movie.releaseDate || 'Upcoming'}</span>
+            </div>
+          ) : (
+            <div>
+              <span className="text-xs text-text-secondary block">Starting from</span>
+              <span className="text-sm font-bold text-foreground">₹250</span>
+            </div>
+          )
         }
       />
     </div>

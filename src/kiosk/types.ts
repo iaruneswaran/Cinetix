@@ -32,6 +32,7 @@ export interface Movie {
   cast: string[];
   synopsis: string;
   releaseDate: string;
+  isUpcoming?: boolean;
 }
 
 export interface Showtime {
@@ -85,12 +86,13 @@ export const MOVIES: Movie[] = [
     format: 'IMAX 2D',
     genre: 'Biography / Music',
     posterColor: '#ff8f00',
-    posterUrl: 'assets/IMAX_Exclusive_Artwork_Michael.jpg',
+    posterUrl: '/assets/IMAX_Exclusive_Artwork_Michael.jpg',
     trailerId: '3zOLzsbOleM',
     director: 'Antoine Fuqua',
     cast: ['Jaafar Jackson', 'Nia Long', 'Laura Harrier', 'Colman Domingo', 'Miles Teller'],
     synopsis: 'The official biographical drama chronicling the extraordinary life, legendary music career, and complex personal journey of the King of Pop, Michael Jackson, from his early childhood rise in the Jackson 5 to global solo stardom.',
-    releaseDate: 'April 2026'
+    releaseDate: 'April 2026',
+    isUpcoming: false
   },
   {
     id: 2,
@@ -101,12 +103,13 @@ export const MOVIES: Movie[] = [
     format: 'IMAX 3D',
     genre: 'Sci-Fi / Adventure',
     posterColor: '#004d40',
-    posterUrl: 'assets/IMAX_Exclusive_Artwork_Project_Hail_Mary.jpg',
+    posterUrl: '/assets/IMAX_Exclusive_Artwork_Project_Hail_Mary.jpg',
     trailerId: 'm08TxIsFTRI',
     director: 'Phil Lord & Christopher Miller',
     cast: ['Ryan Gosling', 'Sandra Hüller', 'Milana Vayntrub', 'James Ortiz'],
     synopsis: 'Ryland Grace, a sole surviving astronaut on a desperate interstellar space mission, must save Earth from an extinction-level event while forming an unexpected alliance with an intelligent alien engineer.',
-    releaseDate: 'March 2026'
+    releaseDate: 'March 2026',
+    isUpcoming: false
   },
   {
     id: 3,
@@ -117,12 +120,13 @@ export const MOVIES: Movie[] = [
     format: 'IMAX 3D',
     genre: 'Action / Sci-Fi',
     posterColor: '#b71c1c',
-    posterUrl: 'assets/IMAX_Exclusive_Artwork_Spider-Man_Brand_New_Day.jpg',
+    posterUrl: '/assets/IMAX_Exclusive_Artwork_Spider-Man_Brand_New_Day.jpg',
     trailerId: '62bIsvRcPv0',
     director: 'Destin Daniel Cretton',
     cast: ['Tom Holland', 'Zendaya', 'Jacob Batalon', 'Sadie Sink', 'Jon Bernthal'],
     synopsis: 'Operating anonymously as a street-level hero in New York City after everyone forgot Peter Parker, Spider-Man faces dangerous new street syndicates and dark villainous forces threatening the city.',
-    releaseDate: 'July 2026'
+    releaseDate: 'July 2026',
+    isUpcoming: false
   },
   {
     id: 4,
@@ -133,12 +137,13 @@ export const MOVIES: Movie[] = [
     format: 'IMAX 3D',
     genre: 'Action / Fantasy',
     posterColor: '#3e2723',
-    posterUrl: 'assets/IMAX_Exclusive_Artwork_Supergirl.jpg',
+    posterUrl: '/assets/IMAX_Exclusive_Artwork_Supergirl.jpg',
     trailerId: 's1-pfiVMKAs',
     director: 'Craig Gillespie',
     cast: ['Milly Alcock', 'Matthias Schoenaerts', 'Eve Ridley'],
     synopsis: 'Kara Zor-El travels across the cosmos alongside Krypto the Superdog on a cosmic quest for vengeance and justice, discovering her true strength and destiny as the Woman of Tomorrow.',
-    releaseDate: 'June 2026'
+    releaseDate: 'June 2026',
+    isUpcoming: false
   },
   {
     id: 5,
@@ -149,12 +154,13 @@ export const MOVIES: Movie[] = [
     format: 'Standard',
     genre: 'Mystery / Thriller',
     posterColor: '#212121',
-    posterUrl: 'assets/IMAX_Exclusive_Artwork_The_End_of_Oak_Street.jpg',
+    posterUrl: '/assets/IMAX_Exclusive_Artwork_The_End_of_Oak_Street.jpg',
     trailerId: '3oB9AxspVow',
     director: 'David Lynch',
     cast: ['Oscar Isaac', 'Florence Pugh', 'Willem Dafoe', 'Paul Dano'],
     synopsis: 'In a quiet suburban town, a series of mysterious events at the end of Oak Street unveils decades of dark secrets, psychological twists, and surreal truths buried deep beneath the surface.',
-    releaseDate: 'October 2026'
+    releaseDate: 'October 2026',
+    isUpcoming: false
   },
   {
     id: 6,
@@ -165,12 +171,115 @@ export const MOVIES: Movie[] = [
     format: 'IMAX 70MM',
     genre: 'Epic / Drama',
     posterColor: '#1a1a1a',
-    posterUrl: 'assets/IMAX_Exclusive_Artwork_The_Odyssey.jpg',
+    posterUrl: '/assets/IMAX_Exclusive_Artwork_The_Odyssey.jpg',
     trailerId: 'JLEDwlSZcAI',
     director: 'Christopher Nolan',
     cast: ['Ralph Fiennes', 'Cillian Murphy', 'Florence Pugh', 'Tom Hardy', 'Javier Bardem'],
     synopsis: 'Christopher Nolan\'s epic cinematic adaptation of Homer\'s ancient Greek myth. Odysseus embarks on a decade-long voyage home after the fall of Troy, battling mythological monsters and gods.',
-    releaseDate: 'December 2026'
+    releaseDate: 'December 2026',
+    isUpcoming: false
+  },
+  {
+    id: 7,
+    title: 'Disclosure Day',
+    duration: '2h 20m',
+    rating: 'U/A',
+    language: 'English',
+    format: 'IMAX 2D',
+    genre: 'Sci-Fi / Thriller',
+    posterColor: '#1b2a47',
+    posterUrl: '/assets/IMAX_Exclusive_Artwork_Disclosure_Day.jpg',
+    trailerId: 'UJrghaPJ0RY',
+    director: 'Steven Spielberg',
+    cast: ['Emily Blunt', 'Colin Firth', 'Eve Hewson', 'Colman Domingo'],
+    synopsis: 'A thrilling high-stakes sci-fi narrative unraveling humanity\'s first official global disclosure event and the confidential encounters that change civilization forever.',
+    releaseDate: 'Late 2026',
+    isUpcoming: true
+  },
+  {
+    id: 8,
+    title: 'Minions & Monsters',
+    duration: '1h 35m',
+    rating: 'U',
+    language: 'English',
+    format: '3D',
+    genre: 'Animation / Comedy',
+    posterColor: '#fbc02d',
+    posterUrl: '/assets/IMAX_Exclusive_Artwork_Minions___Monsters.jpg',
+    trailerId: '1UqU-yyH9dg',
+    director: 'Kyle Balda',
+    cast: ['Pierre Coffin', 'Steve Carell', 'Taraji P. Henson'],
+    synopsis: 'The Minions embark on a chaotic galactic adventure after accidentally unleashing legendary mythical monsters, bringing hilarity and mayhem across worlds.',
+    releaseDate: 'Summer 2027',
+    isUpcoming: true
+  },
+  {
+    id: 9,
+    title: 'Moana',
+    duration: '2h 15m',
+    rating: 'U',
+    language: 'English',
+    format: 'IMAX 3D',
+    genre: 'Adventure / Musical',
+    posterColor: '#00838f',
+    posterUrl: '/assets/IMAX_Exclusive_Artwork_Moana.jpg',
+    trailerId: 'c51ND9Hdbw0',
+    director: 'Thomas Kail',
+    cast: ['Catherine Laga\'aia', 'Dwayne Johnson', 'John Tui', 'Frankie Adams'],
+    synopsis: 'The epic live-action reimagining of Disney\'s beloved ocean voyage. Moana answers an ancient calling from her ancestors, sailing into dangerous uncharted waters.',
+    releaseDate: 'November 2026',
+    isUpcoming: true
+  },
+  {
+    id: 10,
+    title: 'Mortal Kombat II',
+    duration: '2h 10m',
+    rating: 'A',
+    language: 'English',
+    format: '4DX',
+    genre: 'Action / Fantasy',
+    posterColor: '#880e4f',
+    posterUrl: '/assets/IMAX_Exclusive_Artwork_Mortal_Kombat_II.jpg',
+    trailerId: 'SCYT8vb2siQ',
+    director: 'Simon McQuoid',
+    cast: ['Karl Urban', 'Adeline Rudolph', 'Lewis Tan', 'Hiroyuki Sanada', 'Joe Taslim'],
+    synopsis: 'Johnny Cage joins the Earthrealm champions to fight in the ultimate tournament for survival in Outworld against dark warlord Shao Kahn.',
+    releaseDate: 'October 2026',
+    isUpcoming: true
+  },
+  {
+    id: 11,
+    title: 'Scream 7',
+    duration: '1h 55m',
+    rating: 'A',
+    language: 'English',
+    format: 'Standard',
+    genre: 'Horror / Mystery',
+    posterColor: '#212121',
+    posterUrl: '/assets/IMAX_Exclusive_Artwork_Scream_7.jpg',
+    trailerId: 'ZSdOwt-G49w',
+    director: 'Kevin Williamson',
+    cast: ['Neve Campbell', 'Courteney Cox', 'Patrick Dempsey'],
+    synopsis: 'Sidney Prescott returns as a ruthless new Ghostface killer emerges, targeting her family in a chilling psychological battle for survival.',
+    releaseDate: 'February 2026',
+    isUpcoming: true
+  },
+  {
+    id: 12,
+    title: 'Toy Story 5',
+    duration: '1h 45m',
+    rating: 'U',
+    language: 'English',
+    format: 'IMAX 3D',
+    genre: 'Animation / Family',
+    posterColor: '#1565c0',
+    posterUrl: '/assets/IMAX_Exclusive_Artwork_Toy_Story_5.jpg',
+    trailerId: 'n7f6hlKsxxo',
+    director: 'Andrew Stanton',
+    cast: ['Tom Hanks', 'Tim Allen', 'Joan Cusack'],
+    synopsis: 'Woody, Buzz Lightyear, and the beloved toys confront their biggest modern challenge yet when electronics and smart devices begin capturing children\'s attention.',
+    releaseDate: 'June 2026',
+    isUpcoming: true
   },
 ];
 

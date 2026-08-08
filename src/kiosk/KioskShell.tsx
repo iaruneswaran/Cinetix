@@ -196,7 +196,7 @@ export default function KioskShell() {
   const headerProps = getHeaderProps();
 
   return (
-    <div ref={containerRef} className="w-screen h-screen bg-background overflow-hidden relative flex flex-col">
+    <div ref={containerRef} className="w-full h-[100dvh] min-h-[100dvh] bg-background overflow-hidden relative flex flex-col">
       <div className="w-full h-full flex flex-col relative overflow-hidden">
         {headerProps && <KioskHeader {...headerProps} />}
 
