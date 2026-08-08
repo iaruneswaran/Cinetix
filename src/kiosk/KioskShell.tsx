@@ -71,9 +71,9 @@ export default function KioskShell() {
     return () => window.removeEventListener('resize', updateScale);
   }, []);
 
-  // Inactivity timer (disabled on attract/processing/success)
+  // Inactivity timer (disabled on home/attract/processing/success/timeout)
   useEffect(() => {
-    if (['attract', 'processing', 'success', 'timeout'].includes(screen)) return;
+    if (['home', 'attract', 'processing', 'success', 'timeout'].includes(screen)) return;
 
     const resetTimer = () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
