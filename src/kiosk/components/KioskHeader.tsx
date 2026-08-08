@@ -14,9 +14,9 @@ const STEPS = ['Movie', 'Time', 'Seats', 'Add-ons', 'Review', 'Pay'];
 
 export default function KioskHeader({ step, totalSteps = 6, stepLabels = STEPS, onBack, onCancel, showStepper = true }: Props) {
   return (
-    <div className="h-[64px] bg-surface border-b border-border flex items-center px-6 shrink-0 justify-between">
-      {/* Left section (fixed width for perfect symmetry) */}
-      <div className="flex items-center gap-3 w-[200px] shrink-0">
+    <div className="h-[64px] bg-surface border-b border-border flex items-center justify-between px-6 shrink-0 relative">
+      {/* Left section */}
+      <div className="flex items-center gap-3 w-[160px] shrink-0 z-10">
         {onBack && (
           <button
             onClick={onBack}
@@ -28,46 +28,51 @@ export default function KioskHeader({ step, totalSteps = 6, stepLabels = STEPS, 
         <div className="text-lg font-bold tracking-wider text-primary">CINE<span className="text-foreground">TIX</span></div>
       </div>
 
-      {/* Center section: Stepper navigation */}
+      {/* Center section: Perfectly centered Stepper navigation */}
       {showStepper && step !== undefined && (
-        <div className="flex-1 flex items-center justify-center max-w-[680px] mx-auto px-2">
-          {stepLabels.map((label, i) => (
-            <div key={i} className="flex items-center flex-1 last:flex-initial">
-              {/* Step node (number badge with text below) */}
-              <div className="flex flex-col items-center shrink-0">
+        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 flex items-center w-full max-w-[650px] px-4 pointer-events-none">
+          <div className="w-full relative pointer-events-auto">
+            {/* Background connector line segments (connecting badge centers) */}
+            <div className="absolute top-[12px] left-[8.33%] right-[8.33%] h-[1px] -translate-y-1/2 z-0 flex">
+              {[0, 1, 2, 3, 4].map((i) => (
                 <div
-                  className={`w-6 h-6 flex items-center justify-center text-xs font-bold border transition-all ${
-                    i < step
-                      ? 'bg-primary border-primary text-foreground'
-                      : i === step
-                      ? 'bg-primary/20 border-primary text-primary'
-                      : 'border-border text-disabled bg-surface-alt/40'
-                  }`}
-                >
-                  {i + 1}
-                </div>
-                <span
-                  className={`text-[11px] font-semibold tracking-tight mt-1 whitespace-nowrap transition-colors text-center ${
-                    i <= step ? 'text-foreground font-bold' : 'text-disabled'
-                  }`}
-                >
-                  {label}
-                </span>
-              </div>
-
-              {/* Connecting line aligned with badge center */}
-              {i < stepLabels.length - 1 && (
-                <div className="flex-1 min-w-[16px] mx-2 mb-4">
-                  <div className={`h-[1px] w-full transition-colors ${i < step ? 'bg-primary' : 'bg-border'}`} />
-                </div>
-              )}
+                  key={i}
+                  className={`flex-1 h-[1px] transition-colors ${i < step ? 'bg-primary' : 'bg-border'}`}
+                />
+              ))}
             </div>
-          ))}
+
+            {/* 6 Equal Grid Columns for Step Items */}
+            <div className="grid grid-cols-6 relative z-10">
+              {stepLabels.map((label, i) => (
+                <div key={i} className="flex flex-col items-center justify-center">
+                  <div
+                    className={`w-6 h-6 flex items-center justify-center text-xs font-bold border transition-all ${
+                      i < step
+                        ? 'bg-primary border-primary text-foreground'
+                        : i === step
+                        ? 'bg-primary/20 border-primary text-primary'
+                        : 'border-border text-disabled bg-surface-alt'
+                    }`}
+                  >
+                    {i + 1}
+                  </div>
+                  <span
+                    className={`text-[11px] font-semibold tracking-tight mt-1 whitespace-nowrap transition-colors text-center ${
+                      i <= step ? 'text-foreground font-bold' : 'text-disabled'
+                    }`}
+                  >
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
-      {/* Right section (fixed width matching left for perfect symmetry) */}
-      <div className="flex items-center justify-end w-[200px] shrink-0">
+      {/* Right section */}
+      <div className="flex items-center justify-end w-[160px] shrink-0 z-10">
         {onCancel && (
           <button
             onClick={onCancel}
