@@ -24,20 +24,28 @@ export default function ReviewScreen({ booking, updateBooking, goTo, goBack, res
   return (
     <div className="w-full h-full bg-background flex flex-col">
 
-      <div className="flex-1 overflow-auto px-6 pt-6">
-        <h1 className="text-h1 mb-8">Review & Summary</h1>
+      <div className="flex-1 overflow-auto px-6 pt-5 pb-6">
+        <h1 className="text-xl font-bold mb-4">Review & Summary</h1>
 
         {/* Movie */}
-        <div className="bg-surface border-2 border-border p-6 mb-4">
-          <div className="flex items-start gap-5">
-            <div className="w-20 h-28 shrink-0" style={{ backgroundColor: booking.movie?.posterColor }} />
+        <div className="bg-surface border border-border p-3.5 mb-3">
+          <div className="flex items-start gap-4">
+            <div className="w-16 h-20 shrink-0 relative overflow-hidden border border-border" style={{ backgroundColor: booking.movie?.posterColor }}>
+              {booking.movie?.posterUrl && (
+                <img
+                  src={booking.movie.posterUrl}
+                  alt={booking.movie.title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              )}
+            </div>
             <div>
-              <h2 className="text-h3 mb-2">{booking.movie?.title}</h2>
-              <p className="text-body-m text-text-secondary">{booking.movie?.format} • {booking.movie?.language}</p>
-              <p className="text-body-m text-text-secondary mt-1">
+              <h2 className="text-sm font-bold mb-1">{booking.movie?.title}</h2>
+              <p className="text-xs text-text-secondary">{booking.movie?.format} • {booking.movie?.language}</p>
+              <p className="text-xs text-text-secondary mt-0.5">
                 {booking.date} • {booking.showtime?.time}
               </p>
-              <p className="text-body-m text-text-secondary mt-1">
+              <p className="text-xs text-text-secondary mt-0.5">
                 {booking.showtime?.screen} • CINETIX Multiplex
               </p>
             </div>
@@ -45,55 +53,55 @@ export default function ReviewScreen({ booking, updateBooking, goTo, goBack, res
         </div>
 
         {/* Seats */}
-        <div className="bg-surface border-2 border-border p-6 mb-4">
-          <h3 className="text-h3 mb-3">Seats ({booking.seats.length})</h3>
-          <div className="flex flex-wrap gap-2 mb-3">
+        <div className="bg-surface border border-border p-3.5 mb-3">
+          <h3 className="text-sm font-semibold mb-2">Seats ({booking.seats.length})</h3>
+          <div className="flex flex-wrap gap-1.5 mb-2">
             {booking.seats.map((s: any) => (
-              <span key={`${s.row}${s.col}`} className="bg-primary text-foreground px-4 py-2 text-label font-semibold">
+              <span key={`${s.row}${s.col}`} className="bg-primary text-foreground px-3 py-1 text-xs font-semibold">
                 {s.row}{s.col}
               </span>
             ))}
           </div>
           <div className="flex justify-between">
-            <span className="text-body-m text-text-secondary">Ticket subtotal</span>
-            <span className="text-body-l font-semibold">₹{ticketPrice}</span>
+            <span className="text-xs text-text-secondary">Ticket subtotal</span>
+            <span className="text-sm font-semibold">₹{ticketPrice}</span>
           </div>
         </div>
 
         {/* Add-ons */}
         {booking.addons.length > 0 && (
-          <div className="bg-surface border-2 border-border p-6 mb-4">
-            <h3 className="text-h3 mb-3">Add-ons</h3>
+          <div className="bg-surface border border-border p-3.5 mb-3">
+            <h3 className="text-sm font-semibold mb-2">Add-ons</h3>
             {booking.addons.map((a: any) => (
-              <div key={a.addon.id} className="flex justify-between mb-2">
-                <span className="text-body-m text-text-secondary">{a.addon.title} ×{a.qty}</span>
-                <span className="text-body-m">₹{a.addon.price * a.qty}</span>
+              <div key={a.addon.id} className="flex justify-between mb-1 text-xs">
+                <span className="text-text-secondary">{a.addon.title} ×{a.qty}</span>
+                <span>₹{a.addon.price * a.qty}</span>
               </div>
             ))}
           </div>
         )}
 
         {/* Promo code */}
-        <div className="bg-surface border-2 border-border p-6 mb-4">
-          <div className="flex gap-3">
+        <div className="bg-surface border border-border p-3.5 mb-3">
+          <div className="flex gap-2.5">
             <div className="flex-1 relative">
-              <Tag size={22} className="absolute left-4 top-1/2 -translate-y-1/2 text-disabled" />
+              <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-disabled" />
               <input
                 type="text"
                 placeholder="Enter promo code"
                 value={promo}
                 onChange={e => setPromo(e.target.value)}
-                className="w-full h-14 bg-background border-2 border-border pl-12 pr-4 text-body-m text-foreground placeholder:text-disabled focus:border-primary focus:outline-none"
+                className="w-full h-9 bg-background border border-border pl-9 pr-3 text-xs text-foreground placeholder:text-disabled focus:border-primary focus:outline-none"
               />
             </div>
-            <button className="h-14 px-8 border-2 border-primary text-primary text-label font-semibold hover:bg-primary hover:text-foreground transition-colors">
+            <button className="h-9 px-5 border border-primary text-primary text-xs font-semibold hover:bg-primary hover:text-foreground transition-colors">
               Apply
             </button>
           </div>
         </div>
 
         {/* Price breakdown */}
-        <div className="bg-surface border-2 border-border p-6 mb-4">
+        <div className="bg-surface border border-border p-6 mb-4">
           <div className="flex justify-between mb-3">
             <span className="text-body-m text-text-secondary">Tickets</span>
             <span className="text-body-m">₹{ticketPrice}</span>
@@ -112,7 +120,7 @@ export default function ReviewScreen({ booking, updateBooking, goTo, goBack, res
             <span className="text-body-m text-text-secondary">GST (18%)</span>
             <span className="text-body-m">₹{gst}</span>
           </div>
-          <div className="h-[2px] bg-border my-4" />
+          <div className="h-[1px] bg-border my-4" />
           <div className="flex justify-between">
             <span className="text-h3">Total</span>
             <span className="text-h2 text-primary">₹{total}</span>
@@ -122,12 +130,12 @@ export default function ReviewScreen({ booking, updateBooking, goTo, goBack, res
         {/* T&C */}
         <button
           onClick={() => setAgreed(!agreed)}
-          className="flex items-center gap-4 p-4 mb-8"
+          className="flex items-center gap-4 p-4 mb-4"
         >
-          <div className={`w-8 h-8 border-2 flex items-center justify-center transition-colors ${agreed ? 'bg-primary border-primary' : 'border-border'}`}>
-            {agreed && <Check size={20} strokeWidth={3} />}
+          <div className={`w-6 h-6 border flex items-center justify-center transition-colors ${agreed ? 'bg-primary border-primary text-foreground' : 'border-border'}`}>
+            {agreed && <Check size={16} strokeWidth={3} />}
           </div>
-          <span className="text-body-s text-text-secondary text-left">I agree to the Terms & Conditions and Cancellation Policy</span>
+          <span className="text-xs text-text-secondary text-left">I agree to the Terms & Conditions and Cancellation Policy</span>
         </button>
       </div>
 
@@ -136,7 +144,7 @@ export default function ReviewScreen({ booking, updateBooking, goTo, goBack, res
         ctaDisabled={!agreed}
         onCta={() => {
           updateBooking({ total });
-          goTo('contact');
+          goTo('paymentUPI');
         }}
         leftContent={<span className="text-h2 text-primary">₹{total}</span>}
       />

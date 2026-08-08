@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Minus } from 'lucide-react';
+import { Plus, Minus, Utensils, CupSoda, Popcorn } from 'lucide-react';
 import KioskFooter from '../components/KioskFooter';
 import { ADDONS, Addon } from '../types';
 
@@ -24,37 +24,49 @@ export default function AddonsScreen({ booking, updateBooking, goTo, goBack, res
     });
   };
 
+  const renderAddonIcon = (imageType: string) => {
+    switch (imageType) {
+      case 'drink': return <CupSoda size={24} className="text-primary" />;
+      case 'popcorn': return <Popcorn size={24} className="text-warning" />;
+      default: return <Utensils size={24} className="text-primary" />;
+    }
+  };
+
   const filtered = ADDONS.filter(a => {
     if (tab === 'combos') return a.isCombo;
     if (tab === 'drinks') return a.title.toLowerCase().includes('drink') || a.title.toLowerCase().includes('cold');
     return !a.isCombo;
   });
 
-  const addonsTotal = Object.entries(quantities).reduce((sum, [id, qty]) => {
-    const addon = ADDONS.find(a => a.id === Number(id));
-    return sum + (addon?.price || 0) * qty;
-  }, 0);
+  const selectedAddons = Object.entries(quantities)
+    .filter(([_, qty]) => qty > 0)
+    .map(([id, qty]) => ({
+      addon: ADDONS.find(a => a.id === Number(id))!,
+      qty,
+    }));
 
   const ticketTotal = booking.total || 0;
+  const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.addon.price * a.qty, 0);
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
 
-      <div className="flex-1 overflow-auto px-6 pt-6">
-        <h1 className="text-h1 mb-2">Add Snacks & Drinks</h1>
-        <p className="text-body-m text-text-secondary mb-6">Make your movie experience better</p>
+      <div className="flex-1 overflow-auto px-6 pt-6 pb-6">
+        {/* Header */}
+        <h1 className="text-xl font-bold mb-1">Enhance Your Experience</h1>
+        <p className="text-xs text-text-secondary mb-5">Pre-order snacks and save time at the counter</p>
 
-        {/* Tabs */}
-        <div className="flex gap-3 mb-8">
+        {/* Filter tabs */}
+        <div className="flex gap-2.5 mb-5">
           {[
             { key: 'combos', label: 'Combos' },
             { key: 'snacks', label: 'Snacks' },
-            { key: 'drinks', label: 'Drinks' },
+            { key: 'drinks', label: 'Beverages' },
           ].map(t => (
             <button
               key={t.key}
               onClick={() => setTab(t.key as any)}
-              className={`px-6 h-14 text-label font-medium border-2 transition-all ${tab === t.key ? 'bg-primary border-primary text-foreground' : 'border-border text-text-secondary hover:border-primary'
+              className={`px-4 h-9 text-xs font-medium border transition-all ${tab === t.key ? 'bg-primary border-primary text-foreground' : 'border-border text-text-secondary hover:border-primary'
                 }`}
             >
               {t.label}
@@ -63,7 +75,7 @@ export default function AddonsScreen({ booking, updateBooking, goTo, goBack, res
         </div>
 
         {/* Items */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           {filtered.map((addon, i) => {
             const qty = quantities[addon.id] || 0;
             return (
@@ -72,39 +84,47 @@ export default function AddonsScreen({ booking, updateBooking, goTo, goBack, res
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className="flex items-center gap-5 p-5 bg-surface border-2 border-border"
+                className="flex items-center gap-4 p-3 bg-surface border border-border"
               >
-                <div className="w-20 h-20 bg-surface-alt flex items-center justify-center text-[40px] shrink-0">
-                  {addon.image}
+                <div className="w-14 h-14 bg-surface-alt border border-border flex items-center justify-center shrink-0">
+                  {renderAddonIcon(addon.image)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-1">
-                    <h3 className="text-h3">{addon.title}</h3>
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <h3 className="text-sm font-semibold">{addon.title}</h3>
                     {addon.savings && (
-                      <span className="bg-success/20 text-success text-[13px] font-bold px-3 py-1">{addon.savings}</span>
+                      <span className="bg-success/20 text-success text-[10px] font-bold px-2 py-0.5">{addon.savings}</span>
                     )}
                   </div>
-                  <p className="text-body-s text-text-secondary mb-2">{addon.description}</p>
-                  <span className="text-body-l font-semibold">₹{addon.price}</span>
+                  <p className="text-xs text-text-secondary mb-1">{addon.description}</p>
+                  <span className="text-sm font-semibold">₹{addon.price}</span>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  {qty > 0 && (
+                  {qty > 0 ? (
                     <>
                       <button
                         onClick={() => setQty(addon.id, -1)}
-                        className="w-12 h-12 border-2 border-border flex items-center justify-center hover:border-primary transition-colors"
+                        className="w-8 h-8 border-2 border-border flex items-center justify-center hover:border-primary transition-colors"
                       >
-                        <Minus size={24} strokeWidth={2.5} />
+                        <Minus size={16} strokeWidth={2.5} />
                       </button>
-                      <span className="w-10 text-center text-h3">{qty}</span>
+                      <span className="w-8 text-center text-sm font-bold">{qty}</span>
+                      <button
+                        onClick={() => setQty(addon.id, 1)}
+                        className="w-8 h-8 border-2 border-border flex items-center justify-center hover:border-primary transition-colors"
+                      >
+                        <Plus size={16} strokeWidth={2.5} />
+                      </button>
                     </>
+                  ) : (
+                    <button
+                      onClick={() => setQty(addon.id, 1)}
+                      className="px-4 h-8 bg-primary text-foreground text-xs font-semibold flex items-center gap-1.5 hover:bg-primary-hover transition-colors"
+                    >
+                      <Plus size={16} strokeWidth={2.5} />
+                      ADD
+                    </button>
                   )}
-                  <button
-                    onClick={() => setQty(addon.id, 1)}
-                    className="w-12 h-12 bg-primary flex items-center justify-center hover:bg-primary-hover transition-colors"
-                  >
-                    <Plus size={24} strokeWidth={2.5} />
-                  </button>
                 </div>
               </motion.div>
             );

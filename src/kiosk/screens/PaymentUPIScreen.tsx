@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function PaymentUPIScreen({ booking, goTo, goBack, resetBooking }: Props) {
-  const [status, setStatus] = useState<'waiting' | 'received' | 'confirmed'>('waiting');
+  const [status, setStatus] = useState<'waiting' | 'confirmed'>('waiting');
 
   const upiId = "iaruneswaran@upi";
   const payeeName = "Cinetix";
@@ -20,66 +20,54 @@ export default function PaymentUPIScreen({ booking, goTo, goBack, resetBooking }
 
   // Simulate payment
   useEffect(() => {
-    const t1 = setTimeout(() => setStatus('received'), 5000);
-    const t2 = setTimeout(() => {
+    const t = setTimeout(() => {
       setStatus('confirmed');
-      setTimeout(() => goTo('processing'), 800);
-    }, 7000);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+      setTimeout(() => goTo('success'), 800);
+    }, 5000);
+    return () => clearTimeout(t);
   }, []);
 
   return (
     <div className="w-full h-full bg-background flex flex-col">
 
-      <div className="flex-1 flex flex-col items-center justify-center px-12">
-        <h1 className="text-h1 mb-2">Scan & Pay</h1>
-        <p className="text-body-l text-text-secondary mb-10">Scan the QR with your UPI app</p>
+      <div className="flex-1 flex flex-col items-center justify-center px-6">
+        {/* CINETIX Branding */}
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-lg font-black tracking-widest text-primary uppercase">CINETIX</span>
+          <span className="text-xs text-text-secondary border-l border-border pl-2 uppercase font-medium">Express UPI Pay</span>
+        </div>
 
-        {/* QR Code */}
-        <motion.div
-          animate={status === 'waiting' ? { boxShadow: ['0 0 20px hsl(357 91% 47% / 0.3)', '0 0 40px hsl(357 91% 47% / 0.6)', '0 0 20px hsl(357 91% 47% / 0.3)'] } : {}}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="bg-white p-6 mb-10 rounded-2xl"
-        >
+        <h1 className="text-xl font-bold mb-1">Scan & Pay</h1>
+        <p className="text-xs text-text-secondary mb-6">Scan the QR code using any UPI app (GPay, PhonePe, Paytm)</p>
+
+        {/* QR Code Container with 1px border */}
+        <div className="bg-white p-4 mb-4 border border-border">
           <QRCodeCanvas
             value={upiUri}
-            size={300}
+            size={210}
             level="H"
             includeMargin={false}
           />
-        </motion.div>
+        </div>
 
         {/* Amount */}
-        <div className="text-h2 mb-8">₹{booking.total}</div>
+        <div className="text-xs text-text-secondary mb-1 uppercase tracking-wider font-semibold">Total Amount</div>
+        <div className="text-2xl font-bold text-primary mb-5">₹{booking.total}</div>
 
         {/* Status */}
-        <div className="flex items-center gap-4">
-          {status === 'waiting' && (
+        <div className="flex items-center gap-2.5 bg-surface border border-border px-5 py-2.5">
+          {status === 'waiting' ? (
             <>
-              <Loader2 size={28} className="animate-spin text-primary" />
-              <span className="text-body-l text-text-secondary">Waiting for payment...</span>
+              <Loader2 size={18} className="animate-spin text-primary" />
+              <span className="text-xs text-text-secondary font-medium">Waiting for payment...</span>
             </>
-          )}
-          {status === 'received' && (
+          ) : (
             <>
-              <Loader2 size={28} className="animate-spin text-warning" />
-              <span className="text-body-l text-warning">Payment received, verifying...</span>
-            </>
-          )}
-          {status === 'confirmed' && (
-            <>
-              <CheckCircle size={28} className="text-success" />
-              <span className="text-body-l text-success">Payment confirmed!</span>
+              <CheckCircle size={18} className="text-success" />
+              <span className="text-xs text-success font-medium">Payment received!</span>
             </>
           )}
         </div>
-
-        <button
-          onClick={() => goTo('payment')}
-          className="mt-12 h-14 px-8 border-2 border-border text-text-secondary text-label hover:border-primary transition-colors"
-        >
-          Change Payment Method
-        </button>
       </div>
     </div>
   );

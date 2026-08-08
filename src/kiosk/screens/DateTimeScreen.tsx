@@ -37,40 +37,48 @@ export default function DateTimeScreen({ booking, updateBooking, goTo, goBack, r
   return (
     <div className="w-full h-full bg-background flex flex-col">
 
-      <div className="flex-1 overflow-auto px-6 pt-6">
-        {/* Movie mini banner */}
-        <div className="flex items-center gap-4 p-4 bg-surface border-2 border-border mb-8">
-          <div className="w-16 h-24 shrink-0" style={{ backgroundColor: booking.movie?.posterColor }} />
+      <div className="flex-1 overflow-auto px-6 pt-6 pb-6">
+        {/* Movie mini banner with Poster Image */}
+        <div className="flex items-center gap-4 p-3 bg-surface border border-border mb-6">
+          <div className="w-16 h-20 shrink-0 relative overflow-hidden border border-border" style={{ backgroundColor: booking.movie?.posterColor }}>
+            {booking.movie?.posterUrl && (
+              <img
+                src={booking.movie.posterUrl}
+                alt={booking.movie.title}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            )}
+          </div>
           <div>
-            <h3 className="text-h3 mb-1">{booking.movie?.title}</h3>
-            <p className="text-body-s text-text-secondary">{booking.movie?.format} • {booking.movie?.language} • {booking.movie?.duration}</p>
+            <h3 className="text-sm font-bold mb-1">{booking.movie?.title}</h3>
+            <p className="text-xs text-text-secondary">{booking.movie?.format} • {booking.movie?.language} • {booking.movie?.duration}</p>
           </div>
         </div>
 
         {/* Date rail */}
-        <h2 className="text-h3 mb-4">Select Date</h2>
-        <div className="flex gap-3 mb-10 overflow-x-auto pb-2">
+        <h2 className="text-base font-bold mb-3">Select Date</h2>
+        <div className="flex gap-2.5 mb-6 overflow-x-auto pb-1">
           {DATES.map(d => (
             <button
               key={d.full}
               onClick={() => setSelectedDate(d.full)}
-              className={`min-w-[120px] h-[100px] flex flex-col items-center justify-center border-2 shrink-0 transition-all ${selectedDate === d.full
+              className={`min-w-[90px] h-[64px] flex flex-col items-center justify-center border shrink-0 transition-all ${selectedDate === d.full
                 ? 'bg-primary border-primary text-foreground'
                 : 'border-border text-text-secondary hover:border-primary'
                 }`}
             >
-              <span className="text-label">{d.isToday ? 'Today' : d.day}</span>
-              <span className="text-h2">{d.date}</span>
-              <span className="text-label">{d.month}</span>
+              <span className="text-[11px]">{d.isToday ? 'Today' : d.day}</span>
+              <span className="text-base font-bold leading-none my-0.5">{d.date}</span>
+              <span className="text-[10px]">{d.month}</span>
             </button>
           ))}
         </div>
 
         {/* Showtimes */}
-        <h2 className="text-h3 mb-2">Select Showtime</h2>
-        <p className="text-body-s text-text-secondary mb-4">CINETIX Multiplex • Screen Assigned at Booking</p>
+        <h2 className="text-base font-bold mb-1">Select Showtime</h2>
+        <p className="text-xs text-text-secondary mb-3">CINETIX Multiplex • Screen Assigned at Booking</p>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {SHOWTIMES.map((st, i) => (
             <motion.button
               key={i}
@@ -78,25 +86,25 @@ export default function DateTimeScreen({ booking, updateBooking, goTo, goBack, r
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
               onClick={() => setSelectedShowtime(i)}
-              className={`min-h-[100px] p-5 border-2 text-left transition-all ${selectedShowtime === i
+              className={`p-3 border text-left transition-all ${selectedShowtime === i
                 ? 'bg-primary border-primary'
                 : st.availability === 'almost-full'
                   ? 'border-destructive/40 hover:border-primary'
                   : 'border-border hover:border-primary'
                 }`}
             >
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-h3">{st.time}</span>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-base font-bold">{st.time}</span>
                 {availabilityBadge(st.availability)}
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-label text-text-secondary">{st.format}</span>
-                <span className="text-label text-text-secondary">•</span>
-                <span className="text-label text-text-secondary">{st.screen}</span>
+              <div className="flex items-center gap-2 text-xs text-text-secondary">
+                <span>{st.format}</span>
+                <span>•</span>
+                <span>{st.screen}</span>
               </div>
-              <div className="mt-2">
-                <span className="text-body-m font-semibold">₹{st.price}</span>
-                <span className="text-body-s text-text-secondary ml-1">onwards</span>
+              <div className="mt-1">
+                <span className="text-xs font-semibold">₹{st.price}</span>
+                <span className="text-[10px] text-text-secondary ml-1">onwards</span>
               </div>
             </motion.button>
           ))}

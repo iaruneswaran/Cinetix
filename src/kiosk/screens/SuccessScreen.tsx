@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, Printer, MessageSquare, RotateCcw } from 'lucide-react';
+import { CheckCircle, Download, Share2, Printer, RotateCcw, Check, Clock } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
+import { toast } from 'sonner';
 
 interface Props {
   booking: any;
@@ -10,24 +12,112 @@ interface Props {
 
 export default function SuccessScreen({ booking, resetBooking }: Props) {
   const orderId = booking.orderId || 'CTX8HK39M2';
+  const [downloaded, setDownloaded] = useState(false);
+  const [shared, setShared] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(30);
+
+  // Auto-download ticket on mount
+  useEffect(() => {
+    const autoDownloadTimer = setTimeout(() => {
+      handleDownload();
+    }, 1000);
+    return () => clearTimeout(autoDownloadTimer);
+  }, []);
+
+  // 30-second countdown timer
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      resetBooking();
+      return;
+    }
+    const timer = setInterval(() => {
+      setTimeLeft(prev => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft, resetBooking]);
+
+  const handleDownload = () => {
+    const movieTitle = booking.movie?.title || 'Movie';
+    const showtime = booking.showtime?.time || '';
+    const seats = booking.seats?.map((s: any) => `${s.row}${s.col}`).join(', ') || 'N/A';
+    const content = `=================================\n       CINETIX MOVIE TICKET      \n=================================\nOrder ID: ${orderId}\nMovie: ${movieTitle}\nDate & Time: ${booking.date || 'Today'} • ${showtime}\nScreen: ${booking.showtime?.screen || 'Screen 1'}\nSeats: ${seats}\nTotal Paid: ₹${booking.total || 0}\n=================================\nShow this ticket QR at entry gate.\nThank you for choosing Cinetix!\n=================================`;
+
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `CINETIX_Ticket_${orderId}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    setDownloaded(true);
+    toast.success(`Ticket downloaded as CINETIX_Ticket_${orderId}.txt`);
+    setTimeout(() => setDownloaded(false), 3000);
+  };
+
+  const handleShare = async () => {
+    const movieTitle = booking.movie?.title || 'Movie';
+    const showtime = booking.showtime?.time || '';
+    const seats = booking.seats?.map((s: any) => `${s.row}${s.col}`).join(', ') || 'N/A';
+    const text = `CINETIX Movie Ticket\nOrder ID: ${orderId}\nMovie: ${movieTitle}\nSeats: ${seats}\nShowtime: ${showtime}\nTotal Paid: ₹${booking.total || 0}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Cinetix Ticket',
+          text: text,
+        });
+        toast.success('Ticket shared successfully!');
+      } catch (err) {
+        // User cancelled share
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(text);
+        setShared(true);
+        toast.success('Ticket details copied to clipboard!');
+        setTimeout(() => setShared(false), 3000);
+      } catch (err) {
+        toast.error('Failed to copy ticket details.');
+      }
+    }
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
 
   return (
-    <div className="w-full h-full bg-background flex flex-col items-center px-8 pt-16 overflow-auto">
-      {/* Success icon */}
+    <div className="w-full h-full bg-background flex flex-col items-center px-6 pt-6 overflow-auto max-w-[600px] mx-auto">
+      {/* Success icon with animated red stroke checkmark */}
       <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-        className="mb-8"
+        initial={{ scale: 0, rotate: -45 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+        className="mb-3 flex items-center justify-center"
       >
-        <div className="w-28 h-28 bg-success flex items-center justify-center">
-          <CheckCircle size={64} strokeWidth={2} />
+        <div className="w-16 h-16 border border-primary flex items-center justify-center">
+          <svg viewBox="0 0 50 50" className="w-10 h-10 text-primary">
+            <motion.path
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M 14 26 L 22 34 L 36 16"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+            />
+          </svg>
         </div>
       </motion.div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-        <h1 className="text-h1 text-center mb-2">Booking Confirmed!</h1>
-        <p className="text-body-l text-text-secondary text-center mb-10">Your tickets are ready</p>
+        <h1 className="text-xl font-bold text-center mb-1">Booking Confirmed!</h1>
+        <p className="text-xs text-text-secondary text-center mb-4">Your tickets are ready</p>
       </motion.div>
 
       {/* Order details card */}
@@ -35,76 +125,86 @@ export default function SuccessScreen({ booking, resetBooking }: Props) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="w-full bg-surface border-2 border-border p-8 mb-6"
+        className="w-full bg-surface border border-border p-4 mb-3"
       >
-        <div className="flex justify-between items-start mb-6">
+        <div className="flex justify-between items-start mb-3">
           <div>
-            <span className="text-label text-text-secondary">Order ID</span>
-            <p className="text-h3 font-mono">{orderId}</p>
+            <span className="text-xs text-text-secondary">Order ID</span>
+            <p className="text-sm font-bold font-mono">{orderId}</p>
           </div>
           <div className="text-right">
-            <span className="text-label text-text-secondary">Total Paid</span>
-            <p className="text-h2 text-primary">₹{booking.total}</p>
+            <span className="text-xs text-text-secondary">Total Paid</span>
+            <p className="text-base font-bold text-primary">₹{booking.total}</p>
           </div>
         </div>
 
-        <div className="h-[2px] bg-border mb-6" />
+        <div className="h-[1px] bg-border mb-3" />
 
-        <div className="grid grid-cols-2 gap-y-4 mb-6">
+        <div className="grid grid-cols-2 gap-y-2 mb-3 text-xs">
           <div>
-            <span className="text-label text-text-secondary">Movie</span>
-            <p className="text-body-m">{booking.movie?.title}</p>
+            <span className="text-text-secondary block">Movie</span>
+            <p className="font-semibold">{booking.movie?.title}</p>
           </div>
           <div>
-            <span className="text-label text-text-secondary">Date & Time</span>
-            <p className="text-body-m">{booking.showtime?.time}</p>
+            <span className="text-text-secondary block">Date & Time</span>
+            <p className="font-semibold">{booking.showtime?.time}</p>
           </div>
           <div>
-            <span className="text-label text-text-secondary">Screen</span>
-            <p className="text-body-m">{booking.showtime?.screen}</p>
+            <span className="text-text-secondary block">Screen</span>
+            <p className="font-semibold">{booking.showtime?.screen}</p>
           </div>
           <div>
-            <span className="text-label text-text-secondary">Seats</span>
-            <p className="text-body-m">{booking.seats.map((s: any) => `${s.row}${s.col}`).join(', ')}</p>
+            <span className="text-text-secondary block">Seats</span>
+            <p className="font-semibold">{booking.seats.map((s: any) => `${s.row}${s.col}`).join(', ')}</p>
           </div>
         </div>
 
         {/* QR code */}
         <div className="flex justify-center">
-          <div className="bg-white p-4 rounded-xl">
+          <div className="bg-white p-3 rounded-lg">
             <QRCodeCanvas
               value={orderId}
-              size={160}
+              size={120}
               level="M"
               includeMargin={false}
             />
           </div>
         </div>
-        <p className="text-center text-body-s text-text-secondary mt-3">Show this QR at the entry gate</p>
+        <p className="text-center text-[11px] text-text-secondary mt-2">Show this QR at the entry gate</p>
       </motion.div>
+
+      {/* 30s Countdown Timer Bar */}
+      <div className="w-full bg-surface border border-border p-3 mb-3 flex items-center justify-between text-xs">
+        <div className="flex items-center gap-2 text-text-secondary">
+          <Clock size={16} className="text-primary" />
+          <span>Auto-downloading ticket & returning home</span>
+        </div>
+        <span className="font-mono font-bold text-primary text-sm">{timeLeft}s</span>
+      </div>
 
       {/* Action buttons */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.7 }}
-        className="w-full flex flex-col gap-3 pb-8"
+        className="w-full flex flex-col gap-2 pb-6"
       >
-        <button className="w-full h-[72px] bg-primary text-foreground text-button-l flex items-center justify-center gap-3 hover:bg-primary-hover transition-colors">
-          <Printer size={28} strokeWidth={2} />
-          Print Tickets
-        </button>
-        <button className="w-full h-[72px] border-2 border-primary text-primary text-button-l flex items-center justify-center gap-3 hover:bg-primary hover:text-foreground transition-colors">
-          <MessageSquare size={28} strokeWidth={2} />
-          Send via SMS
-        </button>
-        <button
-          onClick={resetBooking}
-          className="w-full h-[72px] border-2 border-border text-text-secondary text-button-l flex items-center justify-center gap-3 hover:border-primary transition-colors"
-        >
-          <RotateCcw size={28} strokeWidth={2} />
-          New Booking
-        </button>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            onClick={handleDownload}
+            className="h-10 bg-primary text-foreground text-xs font-semibold flex items-center justify-center gap-2 hover:bg-primary-hover transition-colors"
+          >
+            {downloaded ? <Check size={16} strokeWidth={2.5} /> : <Download size={16} strokeWidth={2} />}
+            {downloaded ? 'Downloaded' : 'Download Ticket'}
+          </button>
+          <button
+            onClick={handleShare}
+            className="h-10 border border-primary text-primary text-xs font-semibold flex items-center justify-center gap-2 hover:bg-primary hover:text-foreground transition-colors"
+          >
+            {shared ? <Check size={16} strokeWidth={2.5} /> : <Share2 size={16} strokeWidth={2} />}
+            {shared ? 'Copied Link' : 'Share Ticket'}
+          </button>
+        </div>
       </motion.div>
     </div>
   );

@@ -17,14 +17,14 @@ export default function SeatCountScreen({ booking, updateBooking, goTo, goBack, 
   return (
     <div className="w-full h-full bg-background flex flex-col">
 
-      <div className="flex-1 flex flex-col items-center justify-center px-12">
+      <div className="flex-1 flex flex-col items-center justify-center px-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <Users size={64} className="text-primary mx-auto mb-8" strokeWidth={1.5} />
-          <h1 className="text-h1 mb-4">How many seats?</h1>
-          <p className="text-body-l text-text-secondary mb-16">Select the number of tickets</p>
+          <Users size={36} className="text-primary mx-auto mb-3" strokeWidth={1.5} />
+          <h1 className="text-xl font-bold mb-1">How many seats?</h1>
+          <p className="text-xs text-text-secondary mb-6">Select the number of tickets</p>
         </motion.div>
 
-        <div className="grid grid-cols-5 gap-4 max-w-[600px] w-full mb-16">
+        <div className="grid grid-cols-5 gap-3 max-w-[500px] w-full mb-6">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
             <motion.button
               key={n}
@@ -32,7 +32,7 @@ export default function SeatCountScreen({ booking, updateBooking, goTo, goBack, 
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: n * 0.03 }}
               onClick={() => setCount(n)}
-              className={`h-[88px] flex items-center justify-center text-h2 font-bold border-2 transition-all ${count === n
+              className={`h-[54px] flex items-center justify-center text-lg font-bold border-2 transition-all ${count === n
                 ? 'bg-primary border-primary text-foreground scale-105'
                 : 'border-border text-text-secondary hover:border-primary'
                 }`}
@@ -43,10 +43,10 @@ export default function SeatCountScreen({ booking, updateBooking, goTo, goBack, 
         </div>
 
         {/* Price estimate */}
-        <div className="bg-surface border-2 border-border p-6 w-full max-w-[600px]">
+        <div className="bg-surface border-2 border-border p-3.5 w-full max-w-[500px]">
           <div className="flex justify-between items-center">
-            <span className="text-body-m text-text-secondary">{count} × ₹{booking.showtime?.price || 300}</span>
-            <span className="text-h2">₹{count * (booking.showtime?.price || 300)}</span>
+            <span className="text-xs text-text-secondary">{count} × ₹{booking.showtime?.price || 300}</span>
+            <span className="text-base font-bold">₹{count * (booking.showtime?.price || 300)}</span>
           </div>
         </div>
       </div>

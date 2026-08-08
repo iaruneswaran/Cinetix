@@ -24,27 +24,27 @@ export default function ContactScreen({ booking, updateBooking, goTo, goBack, re
   return (
     <div className="w-full h-full bg-background flex flex-col">
 
-      <div className="flex-1 flex flex-col items-center justify-center px-12">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
-          <Smartphone size={56} className="text-primary mx-auto mb-6" strokeWidth={1.5} />
-          <h1 className="text-h1 mb-3">Send tickets to your phone</h1>
-          <p className="text-body-l text-text-secondary">Enter your mobile number for e-ticket</p>
+      <div className="flex-1 flex flex-col items-center justify-center px-6">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-5">
+          <Smartphone size={32} className="text-primary mx-auto mb-3" strokeWidth={1.5} />
+          <h1 className="text-xl font-bold mb-1">Send tickets to your phone</h1>
+          <p className="text-xs text-text-secondary">Enter your mobile number for e-ticket</p>
         </motion.div>
 
         {/* Phone display */}
-        <div className="w-full max-w-[500px] h-20 border-2 border-border bg-surface flex items-center px-6 mb-8">
-          <span className="text-h3 text-text-secondary mr-3">+91</span>
-          <span className="text-h2 tracking-[4px] flex-1">{phone || <span className="text-disabled">Enter number</span>}</span>
+        <div className="w-full max-w-[400px] h-12 border-2 border-border bg-surface flex items-center px-4 mb-4">
+          <span className="text-sm text-text-secondary mr-2">+91</span>
+          <span className="text-base font-bold tracking-[3px] flex-1">{phone || <span className="text-disabled text-xs font-normal">Enter number</span>}</span>
         </div>
 
         {/* Numeric keypad */}
-        <div className="grid grid-cols-3 gap-3 w-full max-w-[500px] mb-8">
+        <div className="grid grid-cols-3 gap-2 w-full max-w-[400px] mb-4">
           {KEYS.map((k, i) => (
             <button
               key={i}
               onClick={() => k && handleKey(k)}
               disabled={!k}
-              className={`h-[72px] text-h2 font-semibold transition-all ${!k ? '' :
+              className={`h-[46px] text-lg font-bold transition-all ${!k ? '' :
                 k === '⌫'
                   ? 'border-2 border-border text-text-secondary hover:border-primary'
                   : 'border-2 border-border bg-surface hover:border-primary hover:bg-surface-alt active:bg-primary active:border-primary'
@@ -57,10 +57,10 @@ export default function ContactScreen({ booking, updateBooking, goTo, goBack, re
       </div>
 
       <div className="px-6 pb-4">
-        <div className="flex gap-4">
+        <div className="flex gap-3 max-w-[400px] mx-auto">
           <button
             onClick={() => goTo('paymentUPI')}
-            className="flex-1 h-[72px] border-2 border-border text-text-secondary text-button-l hover:border-primary transition-colors"
+            className="flex-1 h-10 border-2 border-border text-text-secondary text-sm font-semibold hover:border-primary transition-colors"
           >
             Skip
           </button>
@@ -70,7 +70,7 @@ export default function ContactScreen({ booking, updateBooking, goTo, goBack, re
               goTo('paymentUPI');
             }}
             disabled={phone.length !== 10}
-            className={`flex-1 h-[72px] text-button-l transition-all ${phone.length === 10
+            className={`flex-1 h-10 text-sm font-semibold transition-all ${phone.length === 10
               ? 'bg-primary text-foreground hover:bg-primary-hover'
               : 'bg-border text-disabled cursor-not-allowed'
               }`}

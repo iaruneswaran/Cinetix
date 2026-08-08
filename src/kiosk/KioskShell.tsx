@@ -37,18 +37,18 @@ const initialBooking: BookingState = {
 };
 
 const FLOW_SCREENS: KioskScreen[] = [
-  'attract', 'language', 'home', 'movieDetails', 'dateTime',
-  'seatCount', 'seatSelection', 'addons', 'review', 'contact',
-  'paymentUPI', 'processing', 'success',
+  'home', 'movieDetails', 'dateTime',
+  'seatCount', 'seatSelection', 'addons', 'review',
+  'paymentUPI', 'success',
 ];
 
 export default function KioskShell() {
-  const [screen, setScreen] = useState<KioskScreen>('attract');
+  const [screen, setScreen] = useState<KioskScreen>('home');
   const [booking, setBooking] = useState<BookingState>(initialBooking);
   const [direction, setDirection] = useState(1);
   const [scale, setScale] = useState(() => {
     if (typeof window !== 'undefined' && window.innerWidth && window.innerHeight) {
-      return Math.max(0.1, Math.min(window.innerWidth / 1080, window.innerHeight / 1920));
+      return Math.max(0.1, Math.min(window.innerWidth / 1920, window.innerHeight / 1080));
     }
     return 1;
   });
@@ -61,8 +61,8 @@ export default function KioskShell() {
   useEffect(() => {
     function updateScale() {
       if (window.innerWidth && window.innerHeight) {
-        const sw = window.innerWidth / 1080;
-        const sh = window.innerHeight / 1920;
+        const sw = window.innerWidth / 1920;
+        const sh = window.innerHeight / 1080;
         setScale(Math.max(0.1, Math.min(sw, sh)));
       }
     }
@@ -113,7 +113,7 @@ export default function KioskShell() {
   const resetBooking = useCallback(() => {
     setBooking(initialBooking);
     setDirection(1);
-    setScreen('attract');
+    setScreen('home');
   }, []);
 
   const updateBooking = useCallback((updates: Partial<BookingState>) => {
@@ -121,9 +121,9 @@ export default function KioskShell() {
   }, []);
 
   const variants = {
-    enter: (d: number) => ({ x: d > 0 ? 1080 : -1080, opacity: 0 }),
+    enter: (d: number) => ({ x: d > 0 ? '100%' : '-100%', opacity: 0 }),
     center: { x: 0, opacity: 1 },
-    exit: (d: number) => ({ x: d > 0 ? -1080 : 1080, opacity: 0 }),
+    exit: (d: number) => ({ x: d > 0 ? '-100%' : '100%', opacity: 0 }),
   };
 
   const screenProps = { booking, updateBooking, goTo, goBack, resetBooking };
@@ -153,18 +153,23 @@ export default function KioskShell() {
 
   // Header configuration
   const getHeaderProps = () => {
-    const noHeaderScreens: KioskScreen[] = ['attract', 'language', 'processing', 'success', 'failure', 'timeout'];
+    const noHeaderScreens: KioskScreen[] = ['processing', 'failure', 'timeout'];
     if (noHeaderScreens.includes(screen)) return null;
 
     const props: any = {
-      onCancel: resetBooking,
       showStepper: true,
     };
 
     if (screen === 'home') {
       props.showStepper = false;
+      props.onCancel = undefined;
+    } else if (screen === 'success') {
+      props.showStepper = false;
+      props.onCancel = resetBooking;
+      props.onBack = undefined;
     } else {
       props.onBack = goBack;
+      props.onCancel = resetBooking;
     }
 
     // Step indices
@@ -191,11 +196,8 @@ export default function KioskShell() {
   const headerProps = getHeaderProps();
 
   return (
-    <div ref={containerRef} className="w-screen h-screen bg-background overflow-hidden relative">
-      <div
-        className="kiosk-frame flex flex-col"
-        style={{ transform: `translate(-50%, -50%) scale(${scale})` }}
-      >
+    <div ref={containerRef} className="w-screen h-screen bg-background overflow-hidden relative flex flex-col">
+      <div className="w-full h-full flex flex-col relative overflow-hidden">
         {headerProps && <KioskHeader {...headerProps} />}
 
         <div className="flex-1 relative overflow-hidden">
@@ -208,7 +210,7 @@ export default function KioskShell() {
               animate="center"
               exit="exit"
               transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="absolute inset-0"
+              className="absolute inset-0 w-full h-full"
             >
               {renderScreen()}
             </motion.div>

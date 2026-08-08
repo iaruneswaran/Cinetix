@@ -32,10 +32,10 @@ export default function LanguageScreen({ goTo }: Props) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.08 }}
             onClick={() => goTo('home')}
-            className="h-[160px] border-2 border-border bg-surface hover:border-primary hover:bg-surface-alt transition-all flex flex-col items-center justify-center gap-2 active:bg-primary active:border-primary"
+            className="h-[90px] border-2 border-border bg-surface hover:border-primary hover:bg-surface-alt transition-all flex flex-col items-center justify-center gap-1 active:bg-primary active:border-primary"
           >
-            <span className="text-h2">{lang.native}</span>
-            <span className="text-body-m text-text-secondary">{lang.label}</span>
+            <span className="text-xl font-bold">{lang.native}</span>
+            <span className="text-xs text-text-secondary">{lang.label}</span>
           </motion.button>
         ))}
       </div>

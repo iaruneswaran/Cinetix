@@ -14,7 +14,7 @@ export default function PaymentCardScreen({ booking, goTo, goBack, resetBooking 
 
   // Simulate detection
   useEffect(() => {
-    const t = setTimeout(() => goTo('processing'), 6000);
+    const t = setTimeout(() => goTo('success'), 6000);
     return () => clearTimeout(t);
   }, []);
 

@@ -1,4 +1,4 @@
-import { ArrowLeft, X, Globe } from 'lucide-react';
+import { ArrowLeft, X } from 'lucide-react';
 import { KioskScreen } from '../types';
 
 interface Props {
@@ -14,57 +14,67 @@ const STEPS = ['Movie', 'Time', 'Seats', 'Add-ons', 'Review', 'Pay'];
 
 export default function KioskHeader({ step, totalSteps = 6, stepLabels = STEPS, onBack, onCancel, showStepper = true }: Props) {
   return (
-    <div className="h-[100px] bg-surface border-b-2 border-border flex items-center px-6 shrink-0">
-      {/* Left */}
-      <div className="flex items-center gap-4 w-[200px]">
+    <div className="h-[64px] bg-surface border-b border-border flex items-center px-6 shrink-0">
+      {/* Left logo & back */}
+      <div className="flex items-center gap-3 shrink-0">
         {onBack && (
           <button
             onClick={onBack}
-            className="w-16 h-16 flex items-center justify-center border-2 border-border hover:border-primary transition-colors"
+            className="w-10 h-10 flex items-center justify-center border border-border hover:border-primary transition-colors"
           >
-            <ArrowLeft size={28} strokeWidth={2} />
+            <ArrowLeft size={20} strokeWidth={2} />
           </button>
         )}
-        <div className="text-h3 font-bold tracking-wider text-primary">CINE<span className="text-foreground">TIX</span></div>
+        <div className="text-lg font-bold tracking-wider text-primary">CINE<span className="text-foreground">TIX</span></div>
       </div>
 
-      {/* Center: stepper */}
+      {/* Center: Stepper navigation */}
       {showStepper && step !== undefined && (
-        <div className="flex-1 flex items-center justify-center gap-1">
+        <div className="flex-1 flex items-center justify-center max-w-[650px] mx-auto px-4">
           {stepLabels.map((label, i) => (
-            <div key={i} className="flex items-center">
+            <div key={i} className="flex items-center flex-1 last:flex-initial">
+              {/* Step node (number badge with text below) */}
               <div className="flex flex-col items-center">
                 <div
-                  className={`w-8 h-8 flex items-center justify-center text-label font-bold border-2 transition-colors ${i < step ? 'bg-primary border-primary text-foreground' :
-                      i === step ? 'border-primary text-primary' :
-                        'border-border text-disabled'
-                    }`}
+                  className={`w-6 h-6 flex items-center justify-center text-xs font-bold border transition-all ${
+                    i < step
+                      ? 'bg-primary border-primary text-foreground'
+                      : i === step
+                      ? 'bg-primary/20 border-primary text-primary'
+                      : 'border-border text-disabled bg-surface-alt/40'
+                  }`}
                 >
                   {i + 1}
                 </div>
-                <span className={`text-[11px] mt-1 ${i <= step ? 'text-foreground' : 'text-disabled'}`}>
+                <span
+                  className={`text-[11px] font-semibold tracking-tight mt-1 whitespace-nowrap transition-colors ${
+                    i <= step ? 'text-foreground font-bold' : 'text-disabled'
+                  }`}
+                >
                   {label}
                 </span>
               </div>
+
+              {/* Connecting line aligned with badge center */}
               {i < stepLabels.length - 1 && (
-                <div className={`w-8 h-[2px] mx-1 mt-[-16px] ${i < step ? 'bg-primary' : 'bg-border'}`} />
+                <div className="flex-1 min-w-[16px] mx-2 mb-4">
+                  <div className={`h-[1px] w-full transition-colors ${i < step ? 'bg-primary' : 'bg-border'}`} />
+                </div>
               )}
             </div>
           ))}
         </div>
       )}
 
-      {/* Right */}
-      <div className="flex items-center gap-3 w-[200px] justify-end ml-auto">
-        <button className="w-12 h-12 flex items-center justify-center border-2 border-border hover:border-primary transition-colors">
-          <Globe size={24} strokeWidth={2} />
-        </button>
+      {/* Right close button */}
+      <div className="flex items-center gap-2.5 shrink-0 ml-auto">
         {onCancel && (
           <button
             onClick={onCancel}
-            className="w-12 h-12 flex items-center justify-center border-2 border-destructive text-destructive hover:bg-destructive hover:text-foreground transition-colors"
+            className="w-10 h-10 flex items-center justify-center border border-destructive text-destructive hover:bg-destructive hover:text-foreground transition-colors"
+            title="Cancel"
           >
-            <X size={24} strokeWidth={2} />
+            <X size={18} strokeWidth={2} />
           </button>
         )}
       </div>

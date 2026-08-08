@@ -57,17 +57,17 @@ export default function AttractScreen({ goTo }: Props) {
       </motion.div>
 
       {/* Animated red line accents */}
-      <div className="absolute top-[400px] left-0 right-0 h-[2px] overflow-hidden">
+      <div className="absolute top-[300px] left-0 right-0 h-[2px] overflow-hidden">
         <motion.div
           className="h-full bg-primary w-[300px]"
-          animate={{ x: [-300, 1380] }}
+          animate={{ x: [-300, 2220] }}
           transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
         />
       </div>
-      <div className="absolute top-[1200px] left-0 right-0 h-[2px] overflow-hidden">
+      <div className="absolute top-[750px] left-0 right-0 h-[2px] overflow-hidden">
         <motion.div
           className="h-full bg-primary w-[200px]"
-          animate={{ x: [1080, -200] }}
+          animate={{ x: [2120, -200] }}
           transition={{ duration: 4, repeat: Infinity, ease: 'linear', delay: 1 }}
         />
       </div>
