@@ -14,9 +14,9 @@ const STEPS = ['Movie', 'Time', 'Seats', 'Add-ons', 'Review', 'Pay'];
 
 export default function KioskHeader({ step, totalSteps = 6, stepLabels = STEPS, onBack, onCancel, showStepper = true }: Props) {
   return (
-    <div className="h-[64px] bg-surface border-b border-border flex items-center px-6 shrink-0">
-      {/* Left logo & back */}
-      <div className="flex items-center gap-3 shrink-0">
+    <div className="h-[64px] bg-surface border-b border-border flex items-center px-6 shrink-0 justify-between">
+      {/* Left section (fixed width for perfect symmetry) */}
+      <div className="flex items-center gap-3 w-[200px] shrink-0">
         {onBack && (
           <button
             onClick={onBack}
@@ -28,13 +28,13 @@ export default function KioskHeader({ step, totalSteps = 6, stepLabels = STEPS, 
         <div className="text-lg font-bold tracking-wider text-primary">CINE<span className="text-foreground">TIX</span></div>
       </div>
 
-      {/* Center: Stepper navigation */}
+      {/* Center section: Stepper navigation */}
       {showStepper && step !== undefined && (
-        <div className="flex-1 flex items-center justify-center max-w-[650px] mx-auto px-4">
+        <div className="flex-1 flex items-center justify-center max-w-[680px] mx-auto px-2">
           {stepLabels.map((label, i) => (
             <div key={i} className="flex items-center flex-1 last:flex-initial">
               {/* Step node (number badge with text below) */}
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center shrink-0">
                 <div
                   className={`w-6 h-6 flex items-center justify-center text-xs font-bold border transition-all ${
                     i < step
@@ -47,7 +47,7 @@ export default function KioskHeader({ step, totalSteps = 6, stepLabels = STEPS, 
                   {i + 1}
                 </div>
                 <span
-                  className={`text-[11px] font-semibold tracking-tight mt-1 whitespace-nowrap transition-colors ${
+                  className={`text-[11px] font-semibold tracking-tight mt-1 whitespace-nowrap transition-colors text-center ${
                     i <= step ? 'text-foreground font-bold' : 'text-disabled'
                   }`}
                 >
@@ -66,8 +66,8 @@ export default function KioskHeader({ step, totalSteps = 6, stepLabels = STEPS, 
         </div>
       )}
 
-      {/* Right close button */}
-      <div className="flex items-center gap-2.5 shrink-0 ml-auto">
+      {/* Right section (fixed width matching left for perfect symmetry) */}
+      <div className="flex items-center justify-end w-[200px] shrink-0">
         {onCancel && (
           <button
             onClick={onCancel}
