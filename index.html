@@ -26,25 +26,6 @@
     <link rel="preload" as="image" href="./assets/IMAX_Exclusive_Artwork_The_Odyssey.jpg" />
   <body>
     <div id="root"></div>
-    <script type="module">
-      if (window.location.hostname.includes('github.io')) {
-        const l = document.createElement('link');
-        l.rel = 'stylesheet';
-        l.crossOrigin = '';
-        l.href = './assets/index-D9-qJhSd.css';
-        document.head.appendChild(l);
-
-        const s = document.createElement('script');
-        s.type = 'module';
-        s.crossOrigin = '';
-        s.src = './assets/index-Ct5STOH4.js';
-        document.body.appendChild(s);
-      } else {
-        const s = document.createElement('script');
-        s.type = 'module';
-        s.src = './src/main.tsx';
-        document.body.appendChild(s);
-      }
-    </script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
